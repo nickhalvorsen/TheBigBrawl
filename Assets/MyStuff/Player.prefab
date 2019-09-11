@@ -1660,7 +1660,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: -0, y: 1.2, z: 0.45}
+    m_Position: {x: -0, y: 1.2, z: 0.6}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 0.25, y: 0.25, z: 0.25}
     placementMode: 0
@@ -5821,7 +5821,7 @@ MonoBehaviour:
   serverOnly: 0
   localPlayerAuthority: 1
   m_AssetId: 
-  m_SceneId: 249816278
+  m_SceneId: 0
 --- !u!82 &-5345409201860940461
 AudioSource:
   m_ObjectHideFlags: 0
