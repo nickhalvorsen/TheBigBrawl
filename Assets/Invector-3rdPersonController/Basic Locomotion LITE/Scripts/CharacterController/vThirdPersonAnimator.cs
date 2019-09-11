@@ -28,9 +28,11 @@ namespace Invector.CharacterController
 
         public void OnAnimatorMove()
         {
+            var enableAirStrafe = false;
+
             // we implement this function to override the default root motion.
             // this allows us to modify the positional speed before it's applied.
-            if (isGrounded)
+            if (isGrounded || enableAirStrafe)
             {
                 transform.rotation = animator.rootRotation;
 

@@ -153,6 +153,12 @@ namespace Invector.CharacterController
             {
                 _playerGameRules.EnteredArena();
             }
+
+            // this object is for testing
+            if (collision.collider.name == "Bouncer")
+            {
+                this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(50, this.gameObject.transform.position + new Vector3(0,0,0), 10, 5f, ForceMode.Impulse);
+            }
         }
 
         public virtual void Sprint(bool value)
