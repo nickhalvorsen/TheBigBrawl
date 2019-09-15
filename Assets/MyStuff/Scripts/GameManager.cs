@@ -6,15 +6,17 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     [SyncVar]
-    public int PlayersInArena;
+    private int _playersInArena;
 
-    //public void AddPlayerToArena()
-    //{
-    //    PlayersInArena++;
-    //}
+    public int PlayersInArena => _playersInArena;
 
-    //public void SubtractPlayerFromArena()
-    //{
-    //    PlayersInArena--;
-    //}
+    public void PlayerEnteredArena()
+    {
+        _playersInArena++;
+    }
+
+    public void PlayerLeftArena()
+    {
+        _playersInArena--;
+    }
 }

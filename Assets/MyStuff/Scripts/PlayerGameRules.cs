@@ -52,7 +52,7 @@ public class PlayerGameRules : NetworkBehaviour
     [Command]
     private void CmdPlayerHasEnteredArena()
     {
-        GameManager.PlayersInArena++;
+        GameManager.PlayerEnteredArena();
         RpcPlayerHasEnteredArena();
     }
 
@@ -67,7 +67,7 @@ public class PlayerGameRules : NetworkBehaviour
     [Command]
     private void CmdPlayerHasLeftArena()
     {
-        GameManager.PlayersInArena--;
+        GameManager.PlayerLeftArena();
         RpcPlayerHasLeftArena();
     }
 

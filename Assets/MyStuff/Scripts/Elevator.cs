@@ -13,7 +13,6 @@ public class Elevator : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         if (isServer)
         {
             _startPos = this.gameObject.transform.position;
@@ -23,7 +22,6 @@ public class Elevator : NetworkBehaviour
 
     private void OnGUI()
     {
-
         GUI.Label(new Rect(50, 250, 100, 100), GetPlayersInElevator() + " players in elevator");
     }
 
