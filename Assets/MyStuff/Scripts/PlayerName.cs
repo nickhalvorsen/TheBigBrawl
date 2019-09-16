@@ -21,6 +21,7 @@ public class PlayerName : NetworkBehaviour
         {
             //playerName = 
         }
+
         CmdUpdateName(playerName);
     }
 
@@ -33,6 +34,11 @@ public class PlayerName : NetworkBehaviour
     [ClientRpc]
     private void RpcUpdateName(string name)
     {
+
         NameTag.text = name;
+        if (isLocalPlayer)
+        {
+            NameTag.text = "";
+        }
     }
 }

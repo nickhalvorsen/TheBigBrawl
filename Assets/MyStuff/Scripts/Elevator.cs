@@ -19,6 +19,7 @@ public class Elevator : NetworkBehaviour
     private const int CountdownSeconds = 4;
     private const float ElevatorWallOpenCloseSpeed = 2; // this many seconds it takes 
     private const float MoveToDestinationVelocity = 5;
+    private const float PauseAtDestinationDuration = 2;
 
     private enum ElevatorState
     {
@@ -26,6 +27,7 @@ public class Elevator : NetworkBehaviour
         CountingDown,
         ClosingBackDoor,
         MovingToDestination,
+        PausingAtDestination,
         OpeningAtDestination,
         PausingAfterOpen,
         MovingToStart,
@@ -45,6 +47,7 @@ public class Elevator : NetworkBehaviour
 
     private float _startCountdown;
     private int _lastStartCountdownBeep;
+    private float _pausingAtDestinationTimer;
 
     private GameManager GameManager;
     private AudioSync _audioSync;
@@ -122,6 +125,9 @@ public class Elevator : NetworkBehaviour
             case ElevatorState.MovingToDestination:
                 UpdateMovingToDestination();
                 break;
+            case ElevatorState.PausingAtDestination:
+                UpdatePausingAtDestination();
+                break;
             case ElevatorState.OpeningAtDestination:
                 UpdateOpeningAtDestination();
                 break;
@@ -198,13 +204,25 @@ public class Elevator : NetworkBehaviour
         if (Vector3.Distance(this.transform.position, _endPos) < .1)
         {
             _rigidBody.velocity = new Vector3(0, 0, 0);
-            _audioSync.PlaySound(Sounds.DoorMoving);
-            this._state = ElevatorState.OpeningAtDestination;
+            this._state = ElevatorState.PausingAtDestination;
+            _pausingAtDestinationTimer = PauseAtDestinationDuration;
             return;
         }
 
         _rigidBody.velocity = (_endPos - _startPos).normalized * MoveToDestinationVelocity;
         _rigidBody.MovePosition( _rigidBody.position + _rigidBody.velocity * Time.deltaTime);
+    }
+
+    private void UpdatePausingAtDestination()
+    {
+        if (_pausingAtDestinationTimer <= 0)
+        {
+            _state = ElevatorState.OpeningAtDestination;
+            _audioSync.PlaySound(Sounds.DoorMoving);
+            return;
+        }
+
+        _pausingAtDestinationTimer -= Time.deltaTime;
     }
 
     private void UpdateOpeningAtDestination()
