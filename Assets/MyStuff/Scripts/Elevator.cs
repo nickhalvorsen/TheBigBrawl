@@ -111,6 +111,11 @@ public class Elevator : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isServer)
+        {
+            //return;
+        }
+
         switch (_state)
         {
             case ElevatorState.WaitingForPlayers:
@@ -133,7 +138,8 @@ public class Elevator : NetworkBehaviour
                 break;
         }
 
-        UpdateTextDisplays();
+
+        CmdUpdateTextDisplays();
     }
 
     private void UpdateWaitingForPlayers()
@@ -242,7 +248,15 @@ public class Elevator : NetworkBehaviour
         _arenaDoor.transform.localPosition = new Vector3(_arenaDoor.transform.localPosition.x, newYPosition, _arenaDoor.transform.localPosition.z);
     }
 
-    private void UpdateTextDisplays()
+
+    [Command]
+    private void CmdUpdateTextDisplays()
+    {
+        RpcUpdateTextDisplays();
+    }
+
+    [ClientRpc]
+    private void RpcUpdateTextDisplays()
     {
         foreach (var o in _textDisplays)
         {
