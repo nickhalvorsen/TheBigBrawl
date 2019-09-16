@@ -45,5 +45,8 @@ public class AudioSync : NetworkBehaviour
 
         // point sound
         AudioSource.PlayClipAtPoint(_clips[id], transform.position);
+
+
+
     }
 }

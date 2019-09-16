@@ -8,7 +8,7 @@ namespace Invector.CharacterController
     [RequireComponent(typeof(ForceSync))]
     public class vThirdPersonController : vThirdPersonAnimator
     {
-        private const float slapDuration = 0.30f;
+        private const float slapDuration = 0.40f;
         private const float slapEffectDelay = 0.15f;
         private float slapTimer = 0; // slaptimer starts at slapduration and counts down to 0
         // whether the effect happened or not already
@@ -158,6 +158,28 @@ namespace Invector.CharacterController
             if (collision.collider.name == "Bouncer")
             {
                 this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(50, this.gameObject.transform.position + new Vector3(0,0,0), 10, 5f, ForceMode.Impulse);
+            }
+
+            //if (collision.collider.gameObject.tag == "Moving platform")
+            //{
+            //    this.transform.parent = collision.collider.gameObject.transform; 
+            //}
+        }
+
+        private void OnCollisionExit(Collision collision)
+        {
+            //if (collision.collider.gameObject.tag == "Moving platform")
+            //{
+            //    this.transform.parent = null;
+            //}
+        }
+
+        void OnCollisionStay(Collision other)
+        {
+            if (other.transform.tag == "Moving platform")
+            {
+                GetComponent<Rigidbody>().velocity
+                        = other.gameObject.GetComponent<Rigidbody>().velocity;
             }
         }
 

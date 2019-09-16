@@ -384,6 +384,7 @@ namespace Invector.CharacterController
                     isGrounded = false;
                     // check vertical velocity
                     verticalVelocity = _rigidbody.velocity.y;
+
                     // apply extra gravity when falling
                     if (!onStep && !isJumping)
                         _rigidbody.AddForce(transform.up * extraGravity * Time.deltaTime, ForceMode.VelocityChange);

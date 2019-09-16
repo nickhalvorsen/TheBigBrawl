@@ -46,6 +46,7 @@ public class PlayerGameRules : NetworkBehaviour
         }
 
         GUI.Label(new Rect(10, 10, 200, 20), "Players in arena: " + GameManager.PlayersInArena.ToString());
+        GUI.Label(new Rect(10, 20, 200, 20), "Game state: " + GameManager.GameState.ToString());
     }
 
     // client sending to server
