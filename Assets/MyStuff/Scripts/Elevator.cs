@@ -51,17 +51,16 @@ public class Elevator : NetworkBehaviour
 
     private GameManager GameManager;
     private AudioSync _audioSync;
-
     private Rigidbody _rigidBody;
 
     // Start is called before the first frame update
     void Start()
     {
-        this.GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _textDisplays = GameObject.FindGameObjectsWithTag("Elevator text");
 
         if (isServer)
         {
-            _textDisplays = GameObject.FindGameObjectsWithTag("Elevator text");
+            this.GameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             _arenaDoor = GameObject.FindGameObjectWithTag("Elevator arena door");
             _entranceDoor = GameObject.FindGameObjectWithTag("Elevator back door");
             _audioSync = this.gameObject.GetComponent<AudioSync>();
@@ -252,15 +251,15 @@ public class Elevator : NetworkBehaviour
     [Command]
     private void CmdUpdateTextDisplays()
     {
-        RpcUpdateTextDisplays();
+        RpcUpdateTextDisplays(GetStatusText());
     }
 
     [ClientRpc]
-    private void RpcUpdateTextDisplays()
+    private void RpcUpdateTextDisplays(string text)
     {
         foreach (var o in _textDisplays)
         {
-            o.GetComponent<TextMesh>().text = GetStatusText();
+            o.GetComponent<TextMesh>().text = text;
         }
     }
 
