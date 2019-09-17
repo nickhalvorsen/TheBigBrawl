@@ -160,18 +160,18 @@ namespace Invector.CharacterController
                 this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(50, this.gameObject.transform.position + new Vector3(0,0,0), 10, 5f, ForceMode.Impulse);
             }
 
-            //if (collision.collider.gameObject.tag == "Moving platform")
-            //{
-            //    this.transform.parent = collision.collider.gameObject.transform; 
-            //}
+            if (collision.collider.gameObject.tag == "Moving platform")
+            {
+                //this.transform.parent = collision.collider.gameObject.transform;
+            }
         }
 
         private void OnCollisionExit(Collision collision)
         {
-            //if (collision.collider.gameObject.tag == "Moving platform")
-            //{
-            //    this.transform.parent = null;
-            //}
+            if (collision.collider.gameObject.tag == "Moving platform")
+            {
+                //this.transform.parent = null;
+            }
         }
 
         void OnCollisionStay(Collision other)
