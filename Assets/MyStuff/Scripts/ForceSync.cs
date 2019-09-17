@@ -22,7 +22,7 @@ public class ForceSync : NetworkBehaviour
     [ClientRpc]
     void RpcTriggerForceOnClients()
     {
-        Vector3 explosionPos = transform.position;
+        Vector3 explosionPos = GetClapEffectOrigin();
         Collider[] colliders = Physics.OverlapSphere(explosionPos, clapEffectRadius);
 
         var me = GetComponent<Rigidbody>();
@@ -36,5 +36,11 @@ public class ForceSync : NetworkBehaviour
                 rb.AddExplosionForce(clapEffectForce, explosionPos, clapEffectRadius, .5F, ForceMode.Impulse);
             }
         }
+    }
+
+    private Vector3 GetClapEffectOrigin()
+    {
+        // in front of the character, where the hands meet
+        return transform.position + transform.forward * -.75f;
     }
 }

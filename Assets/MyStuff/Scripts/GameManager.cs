@@ -24,7 +24,27 @@ public class GameManager : NetworkBehaviour
 
     private void Update()
     {
-        
+        switch (_gameState)
+        {
+            case GameState.PostGame:
+                UpdatePostGame();
+                break;
+        }
+    }
+
+    private void UpdatePostGame()
+    {
+        _postGameTimer -= Time.deltaTime;
+
+        if (_postGameTimer <= 0)
+        {
+            BeginWaitingForNewGame();
+        }
+    }
+
+    private void BeginWaitingForNewGame()
+    {
+        _gameState = GameState.Waiting;
     }
 
     public void PlayerEnteredArena()
@@ -43,9 +63,14 @@ public class GameManager : NetworkBehaviour
 
         if (PlayersInArena <= 1)
         {
-            _gameState = GameState.PostGame;
-            _postGameTimer = PostGameDuration;
+            BeginPostGame();
         }
+    }
+
+    private void BeginPostGame()
+    {
+        _gameState = GameState.PostGame;
+        _postGameTimer = PostGameDuration;
     }
 }
 

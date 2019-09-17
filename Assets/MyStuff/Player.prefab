@@ -1110,7 +1110,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.02
+      scalar: 0.04
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5821,7 +5821,7 @@ MonoBehaviour:
   serverOnly: 0
   localPlayerAuthority: 1
   m_AssetId: 
-  m_SceneId: 1382221904
+  m_SceneId: 0
 --- !u!82 &-5345409201860940461
 AudioSource:
   m_ObjectHideFlags: 0
