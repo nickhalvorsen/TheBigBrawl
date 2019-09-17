@@ -11,12 +11,20 @@ public class GameManager : NetworkBehaviour
     [SyncVar]
     private int _playersInArena;
 
+    private const float PostGameDuration = 5;
+    private float _postGameTimer;
+
     public GameState GameState => _gameState;
     public int PlayersInArena => _playersInArena;
 
     private void Start()
     {
         _gameState = GameState.Waiting;
+    }
+
+    private void Update()
+    {
+        
     }
 
     public void PlayerEnteredArena()
@@ -35,7 +43,8 @@ public class GameManager : NetworkBehaviour
 
         if (PlayersInArena <= 1)
         {
-            _gameState = GameState.Waiting;
+            _gameState = GameState.PostGame;
+            _postGameTimer = PostGameDuration;
         }
     }
 }
@@ -43,5 +52,6 @@ public class GameManager : NetworkBehaviour
 public enum GameState
 {
     Waiting,
-    InProgress
+    InProgress,
+    PostGame
 }

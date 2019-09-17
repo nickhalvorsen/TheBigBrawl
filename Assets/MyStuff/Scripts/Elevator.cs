@@ -55,10 +55,7 @@ public class Elevator : NetworkBehaviour
 
     private float _startCountdown;
     private int _lastStartCountdownBeep;
-    private float _pausingAtDestinationTimer;
-    private float _pausingAfterOpenTimer;
-    private float _openingBottomTimer;
-    private float _closingBottomTimer;
+    private float _timer;
 
     private GameManager GameManager;
     private AudioSync _audioSync;
@@ -212,18 +209,21 @@ public class Elevator : NetworkBehaviour
 
         if (_startCountdown < 0)
         {
-            _audioSync.PlaySound(Sounds.DoorMoving);
-            _state = ElevatorState.ClosingBackDoor;
+            BeginClosingBackDoor();
         }
+    }
+
+    private void BeginClosingBackDoor()
+    {
+        _audioSync.PlaySound(Sounds.DoorMoving);
+        _state = ElevatorState.ClosingBackDoor;
     }
 
     private void UpdateClosingBackDoor()
     {
         if (_entranceDoor.transform.localScale.y >= 1.0f)
         {
-            _audioSync.PlaySound(Sounds.DoorContact);
-            _audioSync.PlaySound(Sounds.Moving);
-            _state = ElevatorState.MovingToDestination;
+            BeginMovingToDestination();
             return;
         }
 
@@ -235,13 +235,18 @@ public class Elevator : NetworkBehaviour
         _entranceDoor.transform.localPosition = new Vector3(_entranceDoor.transform.localPosition.x, newYPosition, _entranceDoor.transform.localPosition.z); 
     }
 
+    private void BeginMovingToDestination()
+    {
+        _audioSync.PlaySound(Sounds.DoorContact);
+        _audioSync.PlaySound(Sounds.Moving);
+        _state = ElevatorState.MovingToDestination;
+    }
+
     private void UpdateMovingToDestination()
     {
         if (Vector3.Distance(this.transform.position, _endPos) < .1)
         {
-            _rigidBody.velocity = new Vector3(0, 0, 0);
-            this._state = ElevatorState.PausingAtDestination;
-            _pausingAtDestinationTimer = PauseAtDestinationDuration;
+            BeginPausingAtDestination();
             return;
         }
 
@@ -260,25 +265,35 @@ public class Elevator : NetworkBehaviour
         //}
     }
 
+    private void BeginPausingAtDestination()
+    {
+        _rigidBody.velocity = new Vector3(0, 0, 0);
+        this._state = ElevatorState.PausingAtDestination;
+        _timer = PauseAtDestinationDuration;
+    }
+
     private void UpdatePausingAtDestination()
     {
-        if (_pausingAtDestinationTimer <= 0)
+        if (_timer <= 0)
         {
-            _state = ElevatorState.OpeningAtDestination;
-            _audioSync.PlaySound(Sounds.DoorMoving);
+            BeginOpeningAtDestination();
             return;
         }
 
-        _pausingAtDestinationTimer -= Time.deltaTime;
+        _timer -= Time.deltaTime;
+    }
+
+    private void BeginOpeningAtDestination()
+    {
+        _state = ElevatorState.OpeningAtDestination;
+        _audioSync.PlaySound(Sounds.DoorMoving);
     }
 
     private void UpdateOpeningAtDestination()
     {
         if (_arenaDoor.transform.localScale.y <= 0f)
         {
-            _audioSync.PlaySound(Sounds.DoorContact);
-            _state = ElevatorState.PausingAfterOpen;
-            _pausingAfterOpenTimer = TimeToPauseAfterOpen;
+            BeginPausingAfterOpen();
             return;
         }
 
@@ -290,62 +305,79 @@ public class Elevator : NetworkBehaviour
         _arenaDoor.transform.localPosition = new Vector3(_arenaDoor.transform.localPosition.x, newYPosition, _arenaDoor.transform.localPosition.z);
     }
 
+    private void BeginPausingAfterOpen()
+    {
+        _audioSync.PlaySound(Sounds.DoorContact);
+        _state = ElevatorState.PausingAfterOpen;
+        _timer = TimeToPauseAfterOpen;
+    }
+
     private void UpdatePausingAfterOpen()
     {
-        if (_pausingAfterOpenTimer <= 0)
+        if (_timer <= 0)
         {
-            _state = ElevatorState.OpeningBottomAtDestination;
-            _openingBottomTimer = TimeToOpenBottom;
-            _audioSync.PlaySound(Sounds.DoorMoving);
-            _floorRigidBody = _bottomPlatform.AddComponent<Rigidbody>();
-            _floorRigidBody.isKinematic = true;
+            BeginOpeningBottomAtDestination();
             return;
         }
 
-        _pausingAfterOpenTimer -= Time.deltaTime;
+        _timer -= Time.deltaTime;
+    }
+
+    private void BeginOpeningBottomAtDestination()
+    {
+        _state = ElevatorState.OpeningBottomAtDestination;
+        _timer = TimeToOpenBottom;
+        _audioSync.PlaySound(Sounds.DoorMoving);
+        _floorRigidBody = _bottomPlatform.AddComponent<Rigidbody>();
+        _floorRigidBody.isKinematic = true;
     }
 
     private void UpdateOpeningBottomAtDestination()
     {
-        if (_openingBottomTimer <= 0)
+        if (_timer <= 0)
         {
-            _state = ElevatorState.ClosingBottomAtDestination;
-            _closingBottomTimer = TimeToOpenBottom;
-            _audioSync.PlaySound(Sounds.DoorMoving);
+            BeginClosingBottomAtDestination();
             return;
         }
 
-        _openingBottomTimer -= Time.deltaTime;
+        _timer -= Time.deltaTime;
 
         _floorRigidBody.velocity = new Vector3(0, 0, 5);
         _floorRigidBody.MovePosition(_floorRigidBody.position + _floorRigidBody.velocity * Time.deltaTime);
     }
 
+    private void BeginClosingBottomAtDestination()
+    {
+        _state = ElevatorState.ClosingBottomAtDestination;
+        _timer = TimeToOpenBottom;
+        _audioSync.PlaySound(Sounds.DoorMoving);
+    }
+
     private void UpdateClosingBottomAtDestination()
     {
-        if (_closingBottomTimer <= 0)
+        if (_timer <= 0)
         {
-            _state = ElevatorState.MovingToStart;
-            _audioSync.PlaySound(Sounds.DoorMoving);
-            Destroy(_floorRigidBody);
+            BeginMovingToStart();
             return;
         }
 
-        _closingBottomTimer -= Time.deltaTime;
+        _timer -= Time.deltaTime;
 
-        //_rigidBody.velocity = (_endPos - _startPos).normalized * MoveToDestinationVelocity;
         _floorRigidBody.MovePosition(_floorRigidBody.position + new Vector3(0, 0, -5) * Time.deltaTime);
     }
 
-
+    private void BeginMovingToStart()
+    {
+        _state = ElevatorState.MovingToStart;
+        _audioSync.PlaySound(Sounds.DoorMoving);
+        Destroy(_floorRigidBody);
+    }
 
     private void UpdateMovingToStart()
     {
         if (Vector3.Distance(this.transform.position, _startPos) < .1)
         {
-            _rigidBody.velocity = new Vector3(0, 0, 0);
-            this._state = ElevatorState.ClosingArenaDoorAtStart;
-           // _pausingAtDestinationTimer = PauseAtDestinationDuration;
+            BeginClosingArenaDoorAtStart();
             return;
         }
 
@@ -353,13 +385,17 @@ public class Elevator : NetworkBehaviour
         _rigidBody.MovePosition(_rigidBody.position + _rigidBody.velocity * Time.deltaTime);
     }
 
+    private void BeginClosingArenaDoorAtStart()
+    {
+        _rigidBody.velocity = new Vector3(0, 0, 0);
+        this._state = ElevatorState.ClosingArenaDoorAtStart;
+    }
+
     private void UpdateClosingArenaDoorAtStart()
     {
         if (_arenaDoor.transform.localScale.y >= 1f)
         {
-            _audioSync.PlaySound(Sounds.DoorContact);
-            _audioSync.PlaySound(Sounds.DoorMoving);
-            _state = ElevatorState.OpeningBackDoorAtStart;
+            BeginOpeningBackDoorAtStart();
             return;
         }
 
@@ -369,15 +405,20 @@ public class Elevator : NetworkBehaviour
 
         var newYPosition = 0 + (1 - newYScale) / 2; // -.5 is the default y position for the closed door
         _arenaDoor.transform.localPosition = new Vector3(_arenaDoor.transform.localPosition.x, newYPosition, _arenaDoor.transform.localPosition.z);
+    }
 
+    private void BeginOpeningBackDoorAtStart()
+    {
+        _audioSync.PlaySound(Sounds.DoorContact);
+        _audioSync.PlaySound(Sounds.DoorMoving);
+        _state = ElevatorState.OpeningBackDoorAtStart;
     }
 
     private void UpdateOpeningBackDoorAtStart()
     {
         if (_entranceDoor.transform.localScale.y <= 0.0f)
         {
-            _audioSync.PlaySound(Sounds.DoorContact);
-            _state = ElevatorState.WaitingForPlayers;
+            BeginWaitingForPlayers();
             return;
         }
 
@@ -387,7 +428,12 @@ public class Elevator : NetworkBehaviour
 
         var newYPosition = -.5f + newYScale / 2; // -.5 is the default y position for the closed door
         _entranceDoor.transform.localPosition = new Vector3(_entranceDoor.transform.localPosition.x, newYPosition, _entranceDoor.transform.localPosition.z);
+    }
 
+    private void BeginWaitingForPlayers()
+    {
+        _audioSync.PlaySound(Sounds.DoorContact);
+        _state = ElevatorState.WaitingForPlayers;
     }
 
 
