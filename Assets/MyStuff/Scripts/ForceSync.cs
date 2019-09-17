@@ -4,7 +4,7 @@ using UnityEngine;
 public class ForceSync : NetworkBehaviour
 {
     public const float ClapEffectRadius = 4.0f;
-    public const float ClapEffectForce = 25.0f;
+    public const float ClapEffectForce = 0.2f;
 
     public void PlayForce()
     {
@@ -42,9 +42,13 @@ public class ForceSync : NetworkBehaviour
                     continue;
                 }
 
-                // idk what this garbage is
-                //float forceMagnitude = (float)(ClapEffectForce * 3 / (4 * 3.14159 * distance * distance * distance));
-                float forceMagnitude = ClapEffectForce * (1.0f - (distance / ClapEffectRadius));
+
+                if (distance < 0.5)
+                {
+                    distance = 0.5f;
+                }
+
+                float forceMagnitude = ClapEffectForce * (1.0f / Mathf.Pow(distance / ClapEffectRadius, 2));
                 var horizontalForceDirection = (hitPlayer.position - explosionPos).normalized;
                 horizontalForceDirection.y = 0;
 
@@ -59,6 +63,6 @@ public class ForceSync : NetworkBehaviour
     private Vector3 GetClapEffectOrigin()
     {
         // in front of the character, where the hands meet
-        return transform.position + transform.forward * -.75f;
+        return transform.position + transform.forward * .75f;
     }
 }
