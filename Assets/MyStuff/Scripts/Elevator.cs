@@ -160,6 +160,12 @@ public class Elevator : NetworkBehaviour
             case ElevatorState.MovingToStart:
                 UpdateMovingToStart();
                 break;
+            case ElevatorState.ClosingArenaDoorAtStart:
+                UpdateClosingArenaDoorAtStart();
+                break;
+            case ElevatorState.OpeningBackDoorAtStart:
+                UpdateOpeningBackDoorAtStart();
+                break;
         }
 
 
@@ -338,13 +344,50 @@ public class Elevator : NetworkBehaviour
         if (Vector3.Distance(this.transform.position, _startPos) < .1)
         {
             _rigidBody.velocity = new Vector3(0, 0, 0);
-           // this._state = ElevatorState.PausingAtDestination;
+            this._state = ElevatorState.ClosingArenaDoorAtStart;
            // _pausingAtDestinationTimer = PauseAtDestinationDuration;
             return;
         }
 
         _rigidBody.velocity = (_startPos - _endPos).normalized * MoveToDestinationVelocity;
         _rigidBody.MovePosition(_rigidBody.position + _rigidBody.velocity * Time.deltaTime);
+    }
+
+    private void UpdateClosingArenaDoorAtStart()
+    {
+        if (_arenaDoor.transform.localScale.y >= 1f)
+        {
+            _audioSync.PlaySound(Sounds.DoorContact);
+            _audioSync.PlaySound(Sounds.DoorMoving);
+            _state = ElevatorState.OpeningBackDoorAtStart;
+            return;
+        }
+
+        var scale = _arenaDoor.transform.localScale;
+        var newYScale = scale.y + (1 / ElevatorWallOpenCloseSpeed) * Time.deltaTime;
+        _arenaDoor.transform.localScale = new Vector3(scale.x, newYScale, scale.z);
+
+        var newYPosition = 0 + (1 - newYScale) / 2; // -.5 is the default y position for the closed door
+        _arenaDoor.transform.localPosition = new Vector3(_arenaDoor.transform.localPosition.x, newYPosition, _arenaDoor.transform.localPosition.z);
+
+    }
+
+    private void UpdateOpeningBackDoorAtStart()
+    {
+        if (_entranceDoor.transform.localScale.y <= 0.0f)
+        {
+            _audioSync.PlaySound(Sounds.DoorContact);
+            _state = ElevatorState.WaitingForPlayers;
+            return;
+        }
+
+        var scale = _entranceDoor.transform.localScale;
+        var newYScale = scale.y - (1 / ElevatorWallOpenCloseSpeed) * Time.deltaTime;
+        _entranceDoor.transform.localScale = new Vector3(scale.x, newYScale, scale.z);
+
+        var newYPosition = -.5f + newYScale / 2; // -.5 is the default y position for the closed door
+        _entranceDoor.transform.localPosition = new Vector3(_entranceDoor.transform.localPosition.x, newYPosition, _entranceDoor.transform.localPosition.z);
+
     }
 
 
