@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 720628844}
   - component: {fileID: 720628843}
   m_Layer: 0
-  m_Name: Text
+  m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.172}
+  m_AnchoredPosition: {x: 0, y: -0.266}
   m_SizeDelta: {x: 660.4, y: 188.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &720628844
@@ -79,6 +79,85 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
+--- !u!1 &1241868255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1241868256}
+  - component: {fileID: 1241868258}
+  - component: {fileID: 1241868257}
+  m_Layer: 0
+  m_Name: DamagePercent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1241868256
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241868255}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.003, y: 0.0025576921, z: 4.7553}
+  m_Children: []
+  m_Father: {fileID: 2140746997}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.0000009536743, y: 0.054}
+  m_SizeDelta: {x: 660.4, y: 255}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1241868258
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241868255}
+  m_CullTransparentMesh: 0
+--- !u!114 &1241868257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241868255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 120
+    m_FontStyle: 1
+    m_BestFit: 1
+    m_MinSize: 0
+    m_MaxSize: 120
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 
 --- !u!1 &2140746996
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,12 +189,13 @@ RectTransform:
   m_LocalScale: {x: 0.89, y: 1.04, z: 1}
   m_Children:
   - {fileID: 720628842}
+  - {fileID: 1241868256}
   m_Father: {fileID: 2232023012232275200}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1.73}
+  m_AnchoredPosition: {x: 0, y: 2.212}
   m_SizeDelta: {x: 1.99, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2140747000
@@ -972,6 +1052,7 @@ MonoBehaviour:
   direction: 0
   verticalVelocity: 0
   velocity: 0
+  DamagePercent: 0
 --- !u!114 &2232023012232275204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5821,7 +5902,7 @@ MonoBehaviour:
   serverOnly: 0
   localPlayerAuthority: 1
   m_AssetId: 
-  m_SceneId: 0
+  m_SceneId: 3240518094
 --- !u!82 &-5345409201860940461
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5975,8 +6056,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncInterval: 0.1
-  clapEffectRadius: 15
-  clapEffectForce: 100
 --- !u!114 &-7383502525573291304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6057,6 +6136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncInterval: 0.1
   NameTag: {fileID: 720628843}
+  DamagePercent: {fileID: 1241868257}
 --- !u!1 &2232023012278464027
 GameObject:
   m_ObjectHideFlags: 0

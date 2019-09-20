@@ -48,9 +48,20 @@ public class ForceSync : NetworkBehaviour
                     distance = 0.5f;
                 }
 
+
+                // this is a number between 0 and 1 that gauges how powerful the slap was
+                // 1 = maximum power, 0 = minimum power
+                float slapPower = 1.0f - Mathf.Pow(distance / ClapEffectRadius, 2);
+                hit.gameObject.GetComponent<PlayerGameRules>().PlayerWasSlapped(slapPower);
+
+
+
                 float forceMagnitude = ClapEffectForce * (1.0f / Mathf.Pow(distance / ClapEffectRadius, 2));
                 var horizontalForceDirection = (hitPlayer.position - explosionPos).normalized;
                 horizontalForceDirection.y = 0;
+
+                var playerCurrentDamage = hit.gameObject.GetComponent<PlayerGameRules>().DamagePercent;
+                forceMagnitude += forceMagnitude * playerCurrentDamage / 100.0f;
 
                 hitPlayer.AddForce(horizontalForceDirection * forceMagnitude, ForceMode.Impulse);
                 hitPlayer.AddForce(new Vector3(0, 1, 0) * forceMagnitude * 3, ForceMode.Impulse);

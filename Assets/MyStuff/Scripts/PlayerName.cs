@@ -7,7 +7,7 @@ using Mirror;
 public class PlayerName : NetworkBehaviour
 {
     public Text NameTag;
-    private bool nameInitialized = false;
+    public Text DamagePercent;
     private string playerName;
 
     private void Start()
@@ -15,13 +15,29 @@ public class PlayerName : NetworkBehaviour
         playerName = PlayerPrefs.GetString("PlayerName");
     }
 
+    public void UpdateDamagePercent(float percent)
+    {
+        CmdUpdateDamagePercent(percent);
+    }
+
+    [Command]
+    private void CmdUpdateDamagePercent(float percent)
+    {
+        RpcUpdateDamagePercent(percent);
+    }
+
+    [ClientRpc]
+    private void RpcUpdateDamagePercent(float percent)
+    {
+        DamagePercent.text = ((int)percent).ToString() + "%";
+        //if (isLocalPlayer)
+        //{
+            //DamagePercent.text = "";
+        //}
+    }
+
     public void UpdateName()
     {
-        if (!nameInitialized)
-        {
-            //playerName = 
-        }
-
         CmdUpdateName(playerName);
     }
 
@@ -34,7 +50,7 @@ public class PlayerName : NetworkBehaviour
     [ClientRpc]
     private void RpcUpdateName(string name)
     {
-
+        playerName = name;
         NameTag.text = name;
         if (isLocalPlayer)
         {

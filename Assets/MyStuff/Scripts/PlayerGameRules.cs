@@ -1,19 +1,30 @@
-﻿using Mirror;
+﻿using Invector.CharacterController;
+using Mirror;
 using UnityEngine;
 
 public class PlayerGameRules : NetworkBehaviour
 {
+    private GameManager _gameManager;
+    private vThirdPersonController _vThirdPersonController;
+    private PlayerName _playerName;
+    private AudioSync _audioSync;
+
+    public float DamagePercent;
     private bool _isInArena = false;
-    private GameManager GameManager => GameObject.Find("GameManager").GetComponent<GameManager>();
 
     // Start is called before the first frame update
     void Start()
     {
+        DamagePercent = 0;
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        _vThirdPersonController = this.gameObject.GetComponent<vThirdPersonController>();
+        _audioSync = this.gameObject.GetComponent<AudioSync>();
+        _playerName = this.gameObject.GetComponent<PlayerName>();
     }
 
     private void Update()
     {
-
+        // if player is in arena, set % text to visible
     }
 
     public void EnteredArena()
@@ -38,6 +49,17 @@ public class PlayerGameRules : NetworkBehaviour
         CmdPlayerHasLeftArena();
     }
 
+    public void PlayerWasSlapped(float slapPower)
+    {
+        if (!_isInArena)
+        {
+            return;
+        }
+
+        _vThirdPersonController.DamagePercent += slapPower * 5;
+        _playerName.UpdateDamagePercent(_vThirdPersonController.DamagePercent);
+    }
+
     private void OnGUI()
     {
         if (!isLocalPlayer)
@@ -45,15 +67,16 @@ public class PlayerGameRules : NetworkBehaviour
             return;
         }
 
-        GUI.Label(new Rect(10, 10, 200, 20), "Players in arena: " + GameManager.PlayersInArena.ToString());
-        GUI.Label(new Rect(10, 20, 200, 20), "Game state: " + GameManager.GameState.ToString());
+        GUI.Label(new Rect(10, 10, 200, 20), "Players in arena: " + _gameManager.PlayersInArena.ToString());
+        GUI.Label(new Rect(10, 20, 200, 20), "Game state: " + _gameManager.GameState.ToString());
+        GUI.Label(new Rect(10, 190, 200, 40), _vThirdPersonController.DamagePercent + "%");
     }
 
     // client sending to server
     [Command]
     private void CmdPlayerHasEnteredArena()
     {
-        GameManager.PlayerEnteredArena();
+        _gameManager.PlayerEnteredArena();
         RpcPlayerHasEnteredArena();
     }
 
@@ -61,14 +84,15 @@ public class PlayerGameRules : NetworkBehaviour
     [ClientRpc]
     private void RpcPlayerHasEnteredArena()
     {
-        var a = GetComponent<AudioSync>();
-        a.PlaySound(AudioSync.EnterArenaSound);
+        DamagePercent = 0;
+        _audioSync.PlaySound(AudioSync.EnterArenaSound);
+        _playerName.UpdateDamagePercent(DamagePercent);
     }
 
     [Command]
     private void CmdPlayerHasLeftArena()
     {
-        GameManager.PlayerLeftArena();
+        _gameManager.PlayerLeftArena();
         RpcPlayerHasLeftArena();
     }
 

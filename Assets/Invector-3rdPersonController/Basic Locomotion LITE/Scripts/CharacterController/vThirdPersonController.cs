@@ -15,11 +15,14 @@ namespace Invector.CharacterController
         // during this animation 
         private bool slapEffectHappened = false;
 
+        public float DamagePercent;
+
         private Animator _animator;
         private AudioSync _audioSync;
         private ParticleSync _particleSync;
         private ForceSync _forceSync;
         private PlayerGameRules _playerGameRules;
+        private PlayerName _playerName;
 
         enum AttackState { Attacking, Waiting }
         private AttackState attackState = AttackState.Waiting;
@@ -31,7 +34,7 @@ namespace Invector.CharacterController
             _particleSync = GetComponent<ParticleSync>();
             _forceSync = GetComponent<ForceSync>();
             _playerGameRules = GetComponent<PlayerGameRules>();
-
+            _playerName = GetComponent<PlayerName>();
             InvokeRepeating("SyncName", 1f, 5f);
 
 #if !UNITY_EDITOR

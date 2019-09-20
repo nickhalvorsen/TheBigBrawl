@@ -171,6 +171,12 @@ public class Elevator : NetworkBehaviour
 
     private void UpdateWaitingForPlayers()
     {
+        if (!isServer)
+        {
+            return;
+        }
+
+
         if (ShouldTriggerCountdown())
         {
             _state = ElevatorState.CountingDown;
