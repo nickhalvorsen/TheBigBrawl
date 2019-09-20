@@ -461,8 +461,8 @@ public class Elevator : NetworkBehaviour
             case ElevatorState.CountingDown:
                 return $"Starting game in {(int)_startCountdown}";
             default:
-                //return "";
-                return _state.ToString();
+                return "";
+                //return _state.ToString();
         }
     }
 }
