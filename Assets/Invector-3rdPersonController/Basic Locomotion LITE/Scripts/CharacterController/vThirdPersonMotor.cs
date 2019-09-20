@@ -267,10 +267,9 @@ namespace Invector.CharacterController
             }
             else
             {
+                // velY is the velocity in the forward direction with a y component. 
                 var velY = transform.forward * velocity * speed;
                 velY.y = _rigidbody.velocity.y;
-                var velX = transform.right * velocity * direction;
-                velX.x = _rigidbody.velocity.x;
 
                 if (isStrafing)
                 {

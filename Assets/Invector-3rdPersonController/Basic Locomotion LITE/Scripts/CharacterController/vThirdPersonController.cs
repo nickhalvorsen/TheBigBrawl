@@ -129,12 +129,17 @@ namespace Invector.CharacterController
         {
             if (this.transform.position.y < -10)
             {
-                // respawn point
-                this.transform.position = new Vector3(0, 70, 0);
-                this._rigidbody.velocity = new Vector3(0, 0, 0);
-                _audioSync.PlaySound(AudioSync.DeathSound);
-                _playerGameRules.Died();
+                Respawn();
             }
+        }
+
+        void Respawn()
+        {
+            // respawn point
+            this.transform.position = new Vector3(0, 70, 0);
+            this._rigidbody.velocity = new Vector3(0, 0, 0);
+            _audioSync.PlaySound(AudioSync.DeathSound);
+            _playerGameRules.Died();
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -157,7 +162,7 @@ namespace Invector.CharacterController
             // this object is for testing
             if (collision.collider.name == "Bouncer")
             {
-                this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(50, this.gameObject.transform.position + new Vector3(0,0,0), 10, 5f, ForceMode.Impulse);
+                this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(200, this.gameObject.transform.position + new Vector3(0,0,0), 10, 5f, ForceMode.Impulse);
             }
 
             if (collision.collider.gameObject.tag == "Moving platform")

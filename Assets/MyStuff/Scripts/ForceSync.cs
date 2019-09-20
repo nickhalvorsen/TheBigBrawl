@@ -52,8 +52,6 @@ public class ForceSync : NetworkBehaviour
                 var horizontalForceDirection = (hitPlayer.position - explosionPos).normalized;
                 horizontalForceDirection.y = 0;
 
-                Debug.Log(forceMagnitude);
-
                 hitPlayer.AddForce(horizontalForceDirection * forceMagnitude, ForceMode.Impulse);
                 hitPlayer.AddForce(new Vector3(0, 1, 0) * forceMagnitude * 3, ForceMode.Impulse);
             }
