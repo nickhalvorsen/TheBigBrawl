@@ -122,7 +122,7 @@ public class Elevator : NetworkBehaviour
     {
         if (!isServer)
         {
-            //return;
+            return;
         }
 
         switch (_state)
@@ -171,12 +171,6 @@ public class Elevator : NetworkBehaviour
 
     private void UpdateWaitingForPlayers()
     {
-        if (!isServer)
-        {
-            return;
-        }
-
-
         if (ShouldTriggerCountdown())
         {
             _state = ElevatorState.CountingDown;
