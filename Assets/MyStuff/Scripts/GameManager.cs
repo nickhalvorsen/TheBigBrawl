@@ -57,7 +57,7 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    public void PlayerLeftArena()
+    public void PlayerDied()
     {
         _playersInArena--;
 

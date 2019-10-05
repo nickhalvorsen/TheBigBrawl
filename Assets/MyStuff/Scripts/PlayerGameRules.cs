@@ -46,7 +46,7 @@ public class PlayerGameRules : NetworkBehaviour
         }
 
         _isInArena = false;
-        CmdPlayerHasLeftArena();
+        CmdPlayerHasDied();
     }
 
     public void PlayerWasSlapped(float slapPower)
@@ -90,14 +90,15 @@ public class PlayerGameRules : NetworkBehaviour
     }
 
     [Command]
-    private void CmdPlayerHasLeftArena()
+    private void CmdPlayerHasDied()
     {
-        _gameManager.PlayerLeftArena();
-        RpcPlayerHasLeftArena();
+        _gameManager.PlayerDied();
+        RpcPlayerHasDied();
     }
 
     [ClientRpc]
-    private void RpcPlayerHasLeftArena()
+    private void RpcPlayerHasDied()
     {
+        _playerName.UpdateDamagePercent(-1.0f);
     }
 }

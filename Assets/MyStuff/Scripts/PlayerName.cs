@@ -29,11 +29,15 @@ public class PlayerName : NetworkBehaviour
     [ClientRpc]
     private void RpcUpdateDamagePercent(float percent)
     {
-        DamagePercent.text = ((int)percent).ToString() + "%";
-        //if (isLocalPlayer)
-        //{
-            //DamagePercent.text = "";
-        //}
+
+        if (percent >= 0.0f)
+        {
+            DamagePercent.text = ((int)percent).ToString() + "%";
+        }
+        else
+        {
+            DamagePercent.text = "";
+        }
     }
 
     public void UpdateName()
