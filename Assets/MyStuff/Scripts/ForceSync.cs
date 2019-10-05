@@ -77,8 +77,16 @@ public class ForceSync : NetworkBehaviour
         var playerCurrentDamage = localPlayer.gameObject.GetComponent<PlayerGameRules>().DamagePercent;
         forceMagnitude += forceMagnitude * playerCurrentDamage / 100.0f;
 
-        playerRigidBody.AddForce(horizontalForceDirection * forceMagnitude, ForceMode.Impulse);
-        playerRigidBody.AddForce(new Vector3(0, 1, 0) * forceMagnitude * 3, ForceMode.Impulse);
+        var horizForceComponent = horizontalForceDirection * forceMagnitude;
+        var vertForceComponent = new Vector3(0, 1, 0) * forceMagnitude * 3;
+        var force = horizForceComponent + vertForceComponent;
+
+        playerRigidBody.AddForce(force, ForceMode.Impulse);
+
+        // set the isgrounded manually rather than waiting for the next frame to check.
+        // if this is not set manually like this, on this frame, the vThirdPersonMotor or something 
+        // will override the x and z velocity
+        localPlayer.GetComponent<vThirdPersonController>().isGrounded = false;
     }
 
     private GameObject GetLocalPlayer()

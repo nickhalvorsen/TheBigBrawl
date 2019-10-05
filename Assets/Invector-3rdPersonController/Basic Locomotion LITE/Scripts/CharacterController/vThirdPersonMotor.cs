@@ -8,7 +8,6 @@ using Mirror;
 
 namespace Invector.CharacterController
 {
-    //public abstract class vThirdPersonMotor : MonoBehaviour
     public abstract class vThirdPersonMotor : NetworkBehaviour
     {
         #region Variables        
@@ -383,7 +382,6 @@ namespace Invector.CharacterController
                     isGrounded = false;
                     // check vertical velocity
                     verticalVelocity = _rigidbody.velocity.y;
-
                     // apply extra gravity when falling
                     if (!onStep && !isJumping)
                         _rigidbody.AddForce(transform.up * extraGravity * Time.deltaTime, ForceMode.VelocityChange);
