@@ -27,9 +27,6 @@ public class ForceSync : NetworkBehaviour
     [ClientRpc]
     void RpcTriggerForceOnClients(Vector3 explosionPos, int forceOwnerInstanceId)
     {
-        Debug.Log("Triggering force on clients at " + explosionPos.ToString());
-
-
         var localPlayer = GetLocalPlayer();
 
         // Do not calculate force for this player if this player clapped

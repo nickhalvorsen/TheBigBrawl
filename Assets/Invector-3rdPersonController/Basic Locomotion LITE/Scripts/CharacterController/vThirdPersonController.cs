@@ -166,7 +166,7 @@ namespace Invector.CharacterController
             // this object is for testing
             if (collision.collider.name == "Bouncer")
             {
-                this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(200, this.gameObject.transform.position + new Vector3(1,0,0), 10, 0.5f, ForceMode.Impulse);
+                this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(200, this.gameObject.transform.position + new Vector3(0,0,0), 10, 0.5f, ForceMode.Impulse);
             }
 
             if (collision.collider.gameObject.tag == "Moving platform")

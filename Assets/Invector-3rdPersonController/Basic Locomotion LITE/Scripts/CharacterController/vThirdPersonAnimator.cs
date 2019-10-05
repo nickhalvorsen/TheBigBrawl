@@ -5,6 +5,8 @@ namespace Invector.CharacterController
 {
     public abstract class vThirdPersonAnimator : vThirdPersonMotor
     {
+        public float AirStrafeSpeed = 10.0f;
+
         public virtual void UpdateAnimator()
         {
             if (animator == null || !animator.enabled) return;
@@ -28,11 +30,9 @@ namespace Invector.CharacterController
 
         public void OnAnimatorMove()
         {
-            var enableAirStrafe = false;
-
             // we implement this function to override the default root motion.
             // this allows us to modify the positional speed before it's applied.
-            if (isGrounded || enableAirStrafe)
+            if (isGrounded)
             {
                 transform.rotation = animator.rootRotation;
 
@@ -61,6 +61,26 @@ namespace Invector.CharacterController
                         ControlSpeed(freeSprintSpeed);
                 }
             }
+            else
+            {
+                HandleAirStrafe();
+            }
+        }
+
+        private void HandleAirStrafe()
+        {
+            var force = new Vector3(0, 0, 0);
+
+            if (Input.GetKey(KeyCode.W) 
+                || Input.GetKey(KeyCode.A)
+                || Input.GetKey(KeyCode.S)
+                || Input.GetKey(KeyCode.D))
+            {
+                force = transform.forward * AirStrafeSpeed * Time.deltaTime;
+            }
+
+
+            _rigidbody.AddForce(force, ForceMode.VelocityChange);
         }
     }
 }
