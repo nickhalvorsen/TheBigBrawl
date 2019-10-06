@@ -15,7 +15,7 @@ public class Elevator : NetworkBehaviour
         public const int Moving = 4;
     }
 
-    private const int PlayersToTriggerStart = 1;
+    private static int PlayersToTriggerStart => GameManager.PlayersNeededToStartGame;
     private const int CountdownSeconds = 4;
     private const float ElevatorWallOpenCloseSpeed = 2; // this many seconds it takes 
     private const float MoveToDestinationVelocity = 5;
@@ -199,11 +199,11 @@ public class Elevator : NetworkBehaviour
 
             if ((int)_startCountdown == 0)
             {
-                _audioSync.PlaySound(Sounds.CountdownFinalBeep);
+                _audioSync.PlayWorldSound(Sounds.CountdownFinalBeep);
             }
             else
             {
-                _audioSync.PlaySound(Sounds.CountdownBeep);
+                _audioSync.PlayWorldSound(Sounds.CountdownBeep);
             }
         }
 
@@ -215,7 +215,7 @@ public class Elevator : NetworkBehaviour
 
     private void BeginClosingBackDoor()
     {
-        _audioSync.PlaySound(Sounds.DoorMoving);
+        _audioSync.PlayWorldSound(Sounds.DoorMoving);
         _state = ElevatorState.ClosingBackDoor;
     }
 
@@ -237,8 +237,8 @@ public class Elevator : NetworkBehaviour
 
     private void BeginMovingToDestination()
     {
-        _audioSync.PlaySound(Sounds.DoorContact);
-        _audioSync.PlaySound(Sounds.Moving);
+        _audioSync.PlayWorldSound(Sounds.DoorContact);
+        _audioSync.PlayWorldSound(Sounds.Moving);
         _state = ElevatorState.MovingToDestination;
     }
 
@@ -286,7 +286,7 @@ public class Elevator : NetworkBehaviour
     private void BeginOpeningAtDestination()
     {
         _state = ElevatorState.OpeningAtDestination;
-        _audioSync.PlaySound(Sounds.DoorMoving);
+        _audioSync.PlayWorldSound(Sounds.DoorMoving);
     }
 
     private void UpdateOpeningAtDestination()
@@ -307,7 +307,7 @@ public class Elevator : NetworkBehaviour
 
     private void BeginPausingAfterOpen()
     {
-        _audioSync.PlaySound(Sounds.DoorContact);
+        _audioSync.PlayWorldSound(Sounds.DoorContact);
         _state = ElevatorState.PausingAfterOpen;
         _timer = TimeToPauseAfterOpen;
     }
@@ -327,7 +327,7 @@ public class Elevator : NetworkBehaviour
     {
         _state = ElevatorState.OpeningBottomAtDestination;
         _timer = TimeToOpenBottom;
-        _audioSync.PlaySound(Sounds.DoorMoving);
+        _audioSync.PlayWorldSound(Sounds.DoorMoving);
         _floorRigidBody = _bottomPlatform.AddComponent<Rigidbody>();
         _floorRigidBody.isKinematic = true;
     }
@@ -350,7 +350,7 @@ public class Elevator : NetworkBehaviour
     {
         _state = ElevatorState.ClosingBottomAtDestination;
         _timer = TimeToOpenBottom;
-        _audioSync.PlaySound(Sounds.DoorMoving);
+        _audioSync.PlayWorldSound(Sounds.DoorMoving);
     }
 
     private void UpdateClosingBottomAtDestination()
@@ -369,7 +369,7 @@ public class Elevator : NetworkBehaviour
     private void BeginMovingToStart()
     {
         _state = ElevatorState.MovingToStart;
-        _audioSync.PlaySound(Sounds.DoorMoving);
+        _audioSync.PlayWorldSound(Sounds.DoorMoving);
         Destroy(_floorRigidBody);
     }
 
@@ -409,8 +409,8 @@ public class Elevator : NetworkBehaviour
 
     private void BeginOpeningBackDoorAtStart()
     {
-        _audioSync.PlaySound(Sounds.DoorContact);
-        _audioSync.PlaySound(Sounds.DoorMoving);
+        _audioSync.PlayWorldSound(Sounds.DoorContact);
+        _audioSync.PlayWorldSound(Sounds.DoorMoving);
         _state = ElevatorState.OpeningBackDoorAtStart;
     }
 
@@ -432,7 +432,7 @@ public class Elevator : NetworkBehaviour
 
     private void BeginWaitingForPlayers()
     {
-        _audioSync.PlaySound(Sounds.DoorContact);
+        _audioSync.PlayWorldSound(Sounds.DoorContact);
         _state = ElevatorState.WaitingForPlayers;
     }
 

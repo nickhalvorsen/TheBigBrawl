@@ -9,6 +9,13 @@ public class AudioSync : NetworkBehaviour
     public const int SlapSound = 0;
     public const int DeathSound = 1;
     public const int EnterArenaSound = 2;
+    public const int PickupMoneySound = 3;
+
+
+    public const int RoundEndBell = 0;
+    public const int WinRiff1 = 1;
+    public const int WinRiff2 = 2;
+    public const int WinRiff3 = 3;
 
     private AudioSource _audioSource;
     public AudioClip[] _clips;
@@ -19,7 +26,12 @@ public class AudioSync : NetworkBehaviour
         _audioSource = GetComponent<AudioSource>();
     }
 
-    public void PlaySound(int id)
+    public void PlaySoundForUserOnly(int id)
+    {
+        _audioSource.PlayOneShot(_clips[id]);
+    }
+
+    public void PlayWorldSound(int id)
     {
         if (id < 0 || id > _clips.Length)
         {
@@ -29,24 +41,15 @@ public class AudioSync : NetworkBehaviour
         CmdSendServerSound(id);
     }
 
-    // client sending to server
     [Command]
     void CmdSendServerSound(int id)
     {
         RpcSendSoundToClients(id);
     }
-
-    // server sending to clients
+    
     [ClientRpc]
     void RpcSendSoundToClients(int id)
     {
-        // global sound
-        //_audioSource.PlayOneShot(_clips[id]);
-
-        // point sound
         AudioSource.PlayClipAtPoint(_clips[id], transform.position);
-
-
-
     }
 }

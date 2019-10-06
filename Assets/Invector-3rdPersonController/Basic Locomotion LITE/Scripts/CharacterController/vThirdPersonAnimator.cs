@@ -79,8 +79,8 @@ namespace Invector.CharacterController
                 force = transform.forward * AirStrafeSpeed * Time.deltaTime;
             }
 
-
-            _rigidbody.AddForce(force, ForceMode.VelocityChange);
+            
+            gameObject.GetComponent<Rigidbody>().AddForce(force, ForceMode.VelocityChange);
         }
     }
 }

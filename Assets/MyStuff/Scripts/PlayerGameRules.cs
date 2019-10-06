@@ -8,6 +8,7 @@ public class PlayerGameRules : NetworkBehaviour
     private vThirdPersonController _vThirdPersonController;
     private PlayerName _playerName;
     private AudioSync _audioSync;
+    private int _money;
 
     public float DamagePercent;
     private bool _isInArena = false;
@@ -15,6 +16,7 @@ public class PlayerGameRules : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _money = PlayerPrefs.GetInt("Money");
         DamagePercent = 0;
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         _vThirdPersonController = this.gameObject.GetComponent<vThirdPersonController>();
@@ -71,6 +73,13 @@ public class PlayerGameRules : NetworkBehaviour
         GUI.Label(new Rect(10, 20, 200, 20), "Game state: " + _gameManager.GameState.ToString());
     }
 
+    public void PickedUpMoney()
+    {
+        _money++;
+        PlayerPrefs.SetInt("Money", _money);
+        PlayerPrefs.Save();
+    }
+
     // client sending to server
     [Command]
     private void CmdPlayerHasEnteredArena()
@@ -84,7 +93,7 @@ public class PlayerGameRules : NetworkBehaviour
     private void RpcPlayerHasEnteredArena()
     {
         DamagePercent = 0;
-        _audioSync.PlaySound(AudioSync.EnterArenaSound);
+        _audioSync.PlayWorldSound(AudioSync.EnterArenaSound);
         _playerName.UpdateDamagePercent(DamagePercent);
     }
 

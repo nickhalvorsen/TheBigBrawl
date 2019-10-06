@@ -126,7 +126,7 @@ namespace Invector.CharacterController
 
         void TriggerSlapSound()
         {
-            _audioSync.PlaySound(AudioSync.SlapSound);
+            _audioSync.PlayWorldSound(AudioSync.SlapSound);
         }
 
         void CheckIfOutOfBounds()
@@ -142,7 +142,7 @@ namespace Invector.CharacterController
             // respawn point
             this.transform.position = new Vector3(0, 70, 0);
             this._rigidbody.velocity = new Vector3(0, 0, 0);
-            _audioSync.PlaySound(AudioSync.DeathSound);
+            _audioSync.PlayWorldSound(AudioSync.DeathSound);
             _playerGameRules.Died();
         }
 
@@ -173,6 +173,20 @@ namespace Invector.CharacterController
             {
                 //this.transform.parent = collision.collider.gameObject.transform;
             }
+
+            // todo delete gems if they are in water 
+            // todo clap affects gems 
+            if (collision.collider.gameObject.tag == "Pickup_Money")
+            {
+                _playerGameRules.PickedUpMoney();
+                _audioSync.PlayWorldSound(AudioSync.PickupMoneySound);
+                collision.collider.gameObject.SetActive(false);
+            }
+        }
+
+        private void RemovePickup()
+        {
+
         }
 
         private void OnCollisionExit(Collision collision)

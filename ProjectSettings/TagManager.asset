@@ -8,6 +8,8 @@ TagManager:
   - Elevator back door
   - Moving platform
   - Elevator arena door
+  - Fire
+  - Pickup_Money
   layers:
   - Default
   - TransparentFX
