@@ -71,6 +71,7 @@ public class PlayerGameRules : NetworkBehaviour
 
         GUI.Label(new Rect(10, 10, 200, 20), "Players in arena: " + _gameManager.PlayersInArena.ToString());
         GUI.Label(new Rect(10, 20, 200, 20), "Game state: " + _gameManager.GameState.ToString());
+        GUI.Label(new Rect(10, 180, 200, 20), "Gems: " + _money);
     }
 
     public void PickedUpMoney()
