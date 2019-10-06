@@ -11,7 +11,7 @@ public class PlayerGameRules : NetworkBehaviour
     private int _money;
 
     public float DamagePercent;
-    private bool _isInArena = false;
+    public bool _isInArena = false;
 
     // Start is called before the first frame update
     void Start()

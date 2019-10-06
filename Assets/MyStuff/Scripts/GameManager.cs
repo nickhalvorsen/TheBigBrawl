@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-    public const int PlayersNeededToStartGame = 1;
+    public const int PlayersNeededToStartGame = 2;
     
     public int RewardGems = 10;
     public GameObject GemPrefab;
@@ -78,6 +78,7 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    // todo make this into a client rpc 
     private void BeginPostGame()
     {
         _audioSync.PlayWorldSound(AudioSync.RoundEndBell);
