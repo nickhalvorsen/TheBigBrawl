@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
+using System;
 
 public class PlayerName : NetworkBehaviour
 {
@@ -29,15 +30,32 @@ public class PlayerName : NetworkBehaviour
     [ClientRpc]
     private void RpcUpdateDamagePercent(float percent)
     {
-
         if (percent >= 0.0f)
         {
             DamagePercent.text = ((int)percent).ToString() + "%";
+            DamagePercent.color = GetDamageTextColor(percent); // for some reason this has no effect.
         }
         else
         {
             DamagePercent.text = "";
         }
+    }
+
+    private Color GetDamageTextColor(float percent)
+    {
+        var maxColorR = 117;
+        var maxColorG = 22;
+        var maxColorB = 15;
+
+        var maxColorAtPercent = 200.0f;
+
+        var percentOfMaxColor = percent / maxColorAtPercent;
+
+        var r = (255 - (255 - maxColorR) * Math.Min(percentOfMaxColor, 1));
+        var g = (255 - (255 - maxColorG) * Math.Min(percentOfMaxColor, 1));
+        var b = (255 - (255 - maxColorB) * Math.Min(percentOfMaxColor, 1));
+
+        return new Color(r/255.0f, g/255.0f, b/255.0f);
     }
 
     public void UpdateName()
