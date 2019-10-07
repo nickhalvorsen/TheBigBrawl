@@ -89,9 +89,23 @@ public class GameManager : NetworkBehaviour
 
         for (var i = 0; i < RewardGems; i++)
         {
-            Instantiate(GemPrefab, GetRandomGemPosition(), Quaternion.identity);
+            var o = Instantiate(GemPrefab, GetRandomGemPosition(), UnityEngine.Random.rotation);
+
+            NetworkServer.Spawn(o);
         }
 
+    }
+
+    [Command]
+    public void RemovePickup(GameObject gameObject)
+    {
+        RemovePickupClientRpc(gameObject);
+    }
+
+    [ClientRpc]
+    private void RemovePickupClientRpc(GameObject gameObject)
+    {
+        gameObject.SetActive(false);
     }
 
     private Vector3 GetRandomGemPosition()

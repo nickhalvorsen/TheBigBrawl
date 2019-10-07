@@ -2446,7 +2446,8 @@ MonoBehaviour:
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 1842001814111822, guid: 241df458ac096470fbc5985302fd9709, type: 3}
 --- !u!4 &720575648
 Transform:
   m_ObjectHideFlags: 0
@@ -4437,7 +4438,7 @@ GameObject:
   - component: {fileID: 1846218469}
   - component: {fileID: 1846218468}
   m_Layer: 0
-  m_Name: Text
+  m_Name: Title Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4475,7 +4476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.019607844, g: 0.019607844, b: 0.019607844, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Invector.CharacterController
@@ -23,6 +24,7 @@ namespace Invector.CharacterController
         private ForceSync _forceSync;
         private PlayerGameRules _playerGameRules;
         private PlayerName _playerName;
+        private GameManager _gameManager;
 
         enum AttackState { Attacking, Waiting }
         private AttackState attackState = AttackState.Waiting;
@@ -35,6 +37,7 @@ namespace Invector.CharacterController
             _forceSync = GetComponent<ForceSync>();
             _playerGameRules = GetComponent<PlayerGameRules>();
             _playerName = GetComponent<PlayerName>();
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             InvokeRepeating("SyncName", 1f, 5f);
 
 #if !UNITY_EDITOR
@@ -180,13 +183,14 @@ namespace Invector.CharacterController
             {
                 _playerGameRules.PickedUpMoney();
                 _audioSync.PlayWorldSound(AudioSync.PickupMoneySound);
-                collision.collider.gameObject.SetActive(false);
+                StartCoroutine(RemovePickupAfterDelay(collision.collider.gameObject));
             }
         }
 
-        private void RemovePickup()
+        private IEnumerator RemovePickupAfterDelay(GameObject pickupGameObject)
         {
-
+            yield return new WaitForSeconds(0.05f);
+            _gameManager.RemovePickup(pickupGameObject);
         }
 
         private void OnCollisionExit(Collision collision)
