@@ -6,7 +6,7 @@ using UnityEngine;
 public class ForceSync : NetworkBehaviour
 {
     public const float ClapEffectRadius = 4.0f;
-    public const float ClapEffectForce = 0.2f;
+    public const float ClapEffectForce = 0.25f;
 
     public void PlayForce()
     {
@@ -97,7 +97,13 @@ public class ForceSync : NetworkBehaviour
             forceMagnitude += forceMagnitude * playerCurrentDamage / 100.0f;
 
             var horizForceComponent = horizontalForceDirection * forceMagnitude;
-            var vertForceComponent = new Vector3(0, 1, 0) * forceMagnitude * 3;
+            var vertForceComponent = new Vector3(0, 0, 0);
+            
+            if (collider.gameObject.tag == "Player")
+            {
+                vertForceComponent = new Vector3(0, 1, 0) * forceMagnitude * 3;
+            }
+
             var force = horizForceComponent + vertForceComponent;
 
             hitRigidbody.AddForce(force, ForceMode.Impulse);

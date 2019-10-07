@@ -76,23 +76,45 @@ public class GameManager : NetworkBehaviour
         if (PlayersInArena < PlayersNeededToStartGame)
         {
             BeginPostGame();
+            GenerateGems();
         }
     }
 
-    // todo make this into a client rpc?
+    private void GenerateGems()
+    {
+        var gemsToGive = _random.Next(RewardGemsMin, RewardGemsMax);
+        for (var i = 0; i < gemsToGive; i++)
+        {
+            GenerateGem(GetRandomGemPosition(), UnityEngine.Random.rotation);
+        }
+    }
+
+    [Command]
+    private void GenerateGem(Vector3 position, Quaternion rotation)
+    {
+        GenerateGemClientRpc(position, rotation);
+    }
+
+    [ClientRpc]
+    private void GenerateGemClientRpc(Vector3 position, Quaternion rotation)
+    {
+        Instantiate(GemPrefab, position, rotation);
+    }
+
+    [Command]
     private void BeginPostGame()
+    {
+        BeginPostGameClientRpc();
+    }
+
+    [ClientRpc]
+    private void BeginPostGameClientRpc()
     {
         _audioSync.PlayWorldSound(Sounds.RoundEnd);
         var winRiffId = _random.Next(1, 3);
         _audioSync.PlayWorldSound(winRiffId);
         _gameState = GameState.PostGame;
         _postGameTimer = PostGameDuration;
-
-        var gemsToGive = _random.Next(RewardGemsMin, RewardGemsMax);
-        for (var i = 0; i < gemsToGive; i++)
-        {
-            Instantiate(GemPrefab, GetRandomGemPosition(), UnityEngine.Random.rotation);
-        }
     }
 
     private Vector3 GetRandomGemPosition()
