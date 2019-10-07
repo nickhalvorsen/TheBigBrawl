@@ -8,15 +8,6 @@ namespace Invector.CharacterController
     [RequireComponent(typeof(ForceSync))]
     public class vThirdPersonController : vThirdPersonAnimator
     {
-        private const float slapDuration = 0.40f;
-        private const float slapEffectDelay = 0.15f;
-        private float slapTimer = 0; // slaptimer starts at slapduration and counts down to 0
-        // whether the effect happened or not already
-        // during this animation 
-        private bool slapEffectHappened = false;
-
-        public float DamagePercent;
-
         private Animator _animator;
         private AudioSync _audioSync;
         private ParticleSync _particleSync;
@@ -24,7 +15,14 @@ namespace Invector.CharacterController
         private PlayerGameRules _playerGameRules;
         private PlayerName _playerName;
 
-        enum AttackState { Attacking, Waiting }
+        private const float slapDuration = 0.40f;
+        private const float slapEffectDelay = 0.15f;
+        private float slapTimer = 0; // slaptimer starts at slapduration and counts down to 0
+        // whether the effect happened or not already
+        // during this animation 
+        private bool slapEffectHappened = false;
+        public float DamagePercent;
+        private enum AttackState { Attacking, Waiting }
         private AttackState attackState = AttackState.Waiting;
 
         protected virtual void Start()
@@ -35,6 +33,7 @@ namespace Invector.CharacterController
             _forceSync = GetComponent<ForceSync>();
             _playerGameRules = GetComponent<PlayerGameRules>();
             _playerName = GetComponent<PlayerName>();
+            // Instead of syncing the name upon connecting, just do this
             InvokeRepeating("SyncName", 1f, 5f);
 
 #if !UNITY_EDITOR
@@ -126,7 +125,7 @@ namespace Invector.CharacterController
 
         void TriggerSlapSound()
         {
-            _audioSync.PlayWorldSound(AudioSync.SlapSound);
+            _audioSync.PlayWorldSound(Sounds.Slap);
         }
 
         void CheckIfOutOfBounds()
@@ -142,7 +141,7 @@ namespace Invector.CharacterController
             // respawn point
             this.transform.position = new Vector3(0, 70, 0);
             this._rigidbody.velocity = new Vector3(0, 0, 0);
-            _audioSync.PlayWorldSound(AudioSync.DeathSound);
+            _audioSync.PlayWorldSound(Sounds.Death);
             _playerGameRules.Died();
         }
 
@@ -179,14 +178,15 @@ namespace Invector.CharacterController
             if (collision.collider.gameObject.tag == "Pickup_Money")
             {
                 _playerGameRules.PickedUpMoney();
-                _audioSync.PlayWorldSound(AudioSync.PickupMoneySound);
-                collision.collider.gameObject.SetActive(false);
+                _audioSync.PlayWorldSound(Sounds.PickupMoney);
+                StartCoroutine(RemovePickupAfterDelay(collision.collider.gameObject));
             }
         }
 
-        private void RemovePickup()
-        {
-
+        private void RemovePickupAfterDelay(GameObject pickupGameObject)
+        {     
+            yield return new WaitForSeconds(0.1);
+            pickupGameObject.SetActive(false);
         }
 
         private void OnCollisionExit(Collision collision)
@@ -239,5 +239,14 @@ namespace Invector.CharacterController
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), strafeRotationSpeed * Time.fixedDeltaTime);
             targetRotation = transform.rotation;
         }
+    }
+
+
+    private static class Sounds
+    {
+        public const int Slap = 0;
+        public const int Death = 1;
+        public const int EnterArena = 2;
+        public const int PickupMoney = 3;
     }
 }

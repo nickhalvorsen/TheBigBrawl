@@ -50,7 +50,6 @@ public class Elevator : NetworkBehaviour
     private GameObject _arenaDoor;
     private GameObject _entranceDoor;
     private GameObject _bottomPlatform;
-
     private GameObject[] _textDisplays;
 
     private float _startCountdown;

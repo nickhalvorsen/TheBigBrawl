@@ -7,9 +7,15 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     public const int PlayersNeededToStartGame = 2;
-    
-    public int RewardGems = 10;
+    private const float PostGameDuration = 5;
+    public int RewardGemsMin = 10;
+    public int RewardGemsMax = 20;
     public GameObject GemPrefab;
+
+    [HideInInspector]
+    public GameState GameState => _gameState;
+    [HideInInspector]
+    public int PlayersInArena => _playersInArena;
 
     [SyncVar]
     private GameState _gameState;
@@ -19,12 +25,7 @@ public class GameManager : NetworkBehaviour
 
     private AudioSync _audioSync;
     private System.Random _random;
-
-    private const float PostGameDuration = 5;
     private float _postGameTimer;
-
-    public GameState GameState => _gameState;
-    public int PlayersInArena => _playersInArena;
 
     private void Start()
     {
@@ -78,29 +79,42 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    // todo make this into a client rpc 
+    // todo make this into a client rpc?
     private void BeginPostGame()
     {
-        _audioSync.PlayWorldSound(AudioSync.RoundEndBell);
+        _audioSync.PlayWorldSound(Sounds.RoundEnd);
         var winRiffId = _random.Next(1, 3);
         _audioSync.PlayWorldSound(winRiffId);
         _gameState = GameState.PostGame;
         _postGameTimer = PostGameDuration;
 
-        for (var i = 0; i < RewardGems; i++)
+        var gemsToGive = _random.Next(RewardGemsMin, RewardGemsMax);
+        for (var i = 0; i < gemsToGive; i++)
         {
             Instantiate(GemPrefab, GetRandomGemPosition(), Quaternion.identity);
         }
-
     }
 
     private Vector3 GetRandomGemPosition()
     {
-        var x = _random.Next(-20, 20);
-        var y = 50;
-        var z = _random.Next(-102, -66);
+        var x = _random.NextDouble(-20, 20);
+        var y = _random.NextDouble(45, 55);
+        var z = _random.NextDouble(-102, -66);
 
         return new Vector3(x, y, z);
+    }
+
+    private void OnPlayerDisconnected(NetworkPlayer player) 
+    {
+
+    }
+
+    private static class Sounds
+    {
+        public const int RoundEnd = 0;
+        public const int WinRiff1 = 1;
+        public const int WinRiff2 = 2;
+        public const int WinRiff3 = 3;
     }
 }
 
