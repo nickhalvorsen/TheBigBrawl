@@ -94,7 +94,7 @@ public class PlayerGameRules : NetworkBehaviour
     private void RpcPlayerHasEnteredArena()
     {
         DamagePercent = 0;
-        _audioSync.PlayWorldSound(AudioSync.EnterArenaSound);
+        _audioSync.PlayWorldSound(vThirdPersonController.Sounds.EnterArena);
         _playerName.UpdateDamagePercent(DamagePercent);
     }
 

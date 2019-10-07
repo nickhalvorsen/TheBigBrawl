@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-    public const int PlayersNeededToStartGame = 2;
+    public const int PlayersNeededToStartGame = 1;
     private const float PostGameDuration = 5;
     public int RewardGemsMin = 10;
     public int RewardGemsMax = 20;
@@ -91,25 +91,25 @@ public class GameManager : NetworkBehaviour
         var gemsToGive = _random.Next(RewardGemsMin, RewardGemsMax);
         for (var i = 0; i < gemsToGive; i++)
         {
-            Instantiate(GemPrefab, GetRandomGemPosition(), Quaternion.identity);
+            Instantiate(GemPrefab, GetRandomGemPosition(), UnityEngine.Random.rotation);
         }
     }
 
     private Vector3 GetRandomGemPosition()
     {
-        var x = _random.NextDouble(-20, 20);
-        var y = _random.NextDouble(45, 55);
-        var z = _random.NextDouble(-102, -66);
+        var x = _random.Next(-20, 20);
+        var y = _random.Next(45, 55);
+        var z = _random.Next(-102, -66);
 
         return new Vector3(x, y, z);
     }
 
-    private void OnPlayerDisconnected(NetworkPlayer player) 
+    private void OnPlayerDisconnected(NetworkIdentity player) 
     {
-
+        
     }
 
-    private static class Sounds
+    public static class Sounds
     {
         public const int RoundEnd = 0;
         public const int WinRiff1 = 1;

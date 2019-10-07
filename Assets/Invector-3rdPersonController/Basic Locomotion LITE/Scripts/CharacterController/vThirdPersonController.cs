@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Invector.CharacterController
@@ -183,9 +184,9 @@ namespace Invector.CharacterController
             }
         }
 
-        private void RemovePickupAfterDelay(GameObject pickupGameObject)
+        private IEnumerator RemovePickupAfterDelay(GameObject pickupGameObject)
         {     
-            yield return new WaitForSeconds(0.1);
+            yield return new WaitForSeconds(0.05f);
             pickupGameObject.SetActive(false);
         }
 
@@ -239,14 +240,13 @@ namespace Invector.CharacterController
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newRotation), strafeRotationSpeed * Time.fixedDeltaTime);
             targetRotation = transform.rotation;
         }
-    }
 
-
-    private static class Sounds
-    {
-        public const int Slap = 0;
-        public const int Death = 1;
-        public const int EnterArena = 2;
-        public const int PickupMoney = 3;
+        public static class Sounds
+        {
+            public const int Slap = 0;
+            public const int Death = 1;
+            public const int EnterArena = 2;
+            public const int PickupMoney = 3;
+        }
     }
 }
