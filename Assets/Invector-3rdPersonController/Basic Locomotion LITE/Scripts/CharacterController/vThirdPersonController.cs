@@ -15,6 +15,7 @@ namespace Invector.CharacterController
         private ForceSync _forceSync;
         private PlayerGameRules _playerGameRules;
         private PlayerName _playerName;
+        private GameManager _gameManager;
 
         private const float slapDuration = 0.40f;
         private const float slapEffectDelay = 0.15f;
@@ -34,6 +35,7 @@ namespace Invector.CharacterController
             _forceSync = GetComponent<ForceSync>();
             _playerGameRules = GetComponent<PlayerGameRules>();
             _playerName = GetComponent<PlayerName>();
+            _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             // Instead of syncing the name upon connecting, just do this
             InvokeRepeating("SyncName", 1f, 5f);
 
@@ -185,9 +187,9 @@ namespace Invector.CharacterController
         }
 
         private IEnumerator RemovePickupAfterDelay(GameObject pickupGameObject)
-        {     
+        {
             yield return new WaitForSeconds(0.05f);
-            pickupGameObject.SetActive(false);
+            _gameManager.CmdRemovePickup(pickupGameObject);
         }
 
         private void OnCollisionExit(Collision collision)

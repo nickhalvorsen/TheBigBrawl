@@ -90,6 +90,19 @@ public class GameManager : NetworkBehaviour
     }
 
     [Command]
+    public void CmdRemovePickup(GameObject gameObject)
+    {
+        RpcRemovePickup(gameObject);
+    }
+
+    [ClientRpc]
+    private void RpcRemovePickup(GameObject gameObject)
+    {
+        NetworkServer.UnSpawn(gameObject);
+        gameObject.SetActive(false);
+    }
+
+    [Command]
     private void CmdGenerateGem(Vector3 position, Quaternion rotation)
     {
         RpcGenerateGem(position, rotation);
