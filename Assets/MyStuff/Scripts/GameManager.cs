@@ -75,7 +75,7 @@ public class GameManager : NetworkBehaviour
 
         if (PlayersInArena < PlayersNeededToStartGame)
         {
-            BeginPostGame();
+            CmdBeginPostGame();
             GenerateGems();
         }
     }
@@ -85,30 +85,30 @@ public class GameManager : NetworkBehaviour
         var gemsToGive = _random.Next(RewardGemsMin, RewardGemsMax);
         for (var i = 0; i < gemsToGive; i++)
         {
-            GenerateGem(GetRandomGemPosition(), UnityEngine.Random.rotation);
+            CmdGenerateGem(GetRandomGemPosition(), UnityEngine.Random.rotation);
         }
     }
 
     [Command]
-    private void GenerateGem(Vector3 position, Quaternion rotation)
+    private void CmdGenerateGem(Vector3 position, Quaternion rotation)
     {
-        GenerateGemClientRpc(position, rotation);
+        RpcGenerateGem(position, rotation);
     }
 
     [ClientRpc]
-    private void GenerateGemClientRpc(Vector3 position, Quaternion rotation)
+    private void RpcGenerateGem(Vector3 position, Quaternion rotation)
     {
         Instantiate(GemPrefab, position, rotation);
     }
 
     [Command]
-    private void BeginPostGame()
+    private void CmdBeginPostGame()
     {
-        BeginPostGameClientRpc();
+        RpcBeginPostGame();
     }
 
     [ClientRpc]
-    private void BeginPostGameClientRpc()
+    private void RpcBeginPostGame()
     {
         _audioSync.PlayWorldSound(Sounds.RoundEnd);
         var winRiffId = _random.Next(1, 3);
