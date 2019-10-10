@@ -5903,7 +5903,7 @@ MonoBehaviour:
   serverOnly: 0
   localPlayerAuthority: 1
   m_AssetId: 
-  m_SceneId: 3525308156
+  m_SceneId: 1722939184
 --- !u!82 &-5345409201860940461
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6028,10 +6028,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncInterval: 0.1
   _clips:
-  - {fileID: 8300000, guid: 8a2757f3c7e35e540b74c653e63c26f6, type: 3}
-  - {fileID: 8300000, guid: 2fed5d9fae2520a4da85dafbb9afcff2, type: 3}
+  - {fileID: 8300000, guid: 36d76b13611a88746b253616d1ac3637, type: 3}
+  - {fileID: 8300000, guid: 7ba090f13f6a1da43b23a4e5b3ac94f5, type: 3}
   - {fileID: 8300000, guid: 5adfbca4836c9d048872af8aa94af714, type: 3}
-  - {fileID: 8300000, guid: 132f1d57e9a53a44fa504069d7dcfc30, type: 3}
+  - {fileID: 8300000, guid: af1ce659879882e4ca6a8ec704e92baf, type: 3}
 --- !u!114 &3980558633720370006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6125,6 +6125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncInterval: 0.1
   DamagePercent: 0
+  _isInArena: 0
 --- !u!114 &1305678524
 MonoBehaviour:
   m_ObjectHideFlags: 0
