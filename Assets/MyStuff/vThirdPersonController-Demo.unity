@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3491382, g: 0.44828308, b: 0.588015, a: 1}
+  m_IndirectSpecularColor: {r: 0.34916744, g: 0.44831413, b: 0.58806205, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1668,7 +1668,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncInterval: 0.1
-  RewardGems: 10
+  RewardGemsMin: 10
+  RewardGemsMax: 20
   GemPrefab: {fileID: 1842001814111822, guid: 241df458ac096470fbc5985302fd9709, type: 3}
 --- !u!114 &449743691
 MonoBehaviour:
@@ -1684,10 +1685,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncInterval: 0.1
   _clips:
-  - {fileID: 8300000, guid: f10fa6695a8f0f54980bee6589513ad8, type: 3}
-  - {fileID: 8300000, guid: 7cdd269d5f9501644b45371a8c0b1177, type: 3}
-  - {fileID: 8300000, guid: e1197000f24d0dc45bf3d3ac11082e58, type: 3}
-  - {fileID: 8300000, guid: cff97edb482e5e14b91703e8aa296652, type: 3}
+  - {fileID: 8300000, guid: b2f05ec25febf9744bece860a2d3861c, type: 3}
+  - {fileID: 8300000, guid: b7dd1d8a7d86ee54e94474e631e87fac, type: 3}
+  - {fileID: 8300000, guid: 100a5a34d68224340b4783eba8312c88, type: 3}
+  - {fileID: 8300000, guid: 9e5878483a979e142a1b7272560c250b, type: 3}
 --- !u!82 &449743692
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2604,11 +2605,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncInterval: 0.1
   _clips:
-  - {fileID: 8300000, guid: 23403350a99d51844b402ea429bf8547, type: 3}
-  - {fileID: 8300000, guid: 1ab8848d36991fc4ead9cc62da108da5, type: 3}
-  - {fileID: 8300000, guid: 6bc3151ee3f85be4b947e30c31a0366b, type: 3}
-  - {fileID: 8300000, guid: abe2f0fd57f7b2f4aa9625ce2a697ce5, type: 3}
-  - {fileID: 8300000, guid: 614628203ab268d43b2aa367286727f1, type: 3}
+  - {fileID: 8300000, guid: 3a5767c8d74422141ad9b96b6dae1a7a, type: 3}
+  - {fileID: 8300000, guid: be07eee9236329542835fc70944bdbf9, type: 3}
+  - {fileID: 8300000, guid: 89efeee120866854a8ecdbb9a6ba2fad, type: 3}
+  - {fileID: 8300000, guid: 7b197c9016a8be84489d4b0a0b738cd5, type: 3}
+  - {fileID: 8300000, guid: 41a39a952a6110042a3b2ffe806e31f7, type: 3}
 --- !u!82 &736274484
 AudioSource:
   m_ObjectHideFlags: 0
