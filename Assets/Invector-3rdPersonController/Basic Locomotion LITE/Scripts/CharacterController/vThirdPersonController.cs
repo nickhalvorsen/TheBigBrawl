@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 namespace Invector.CharacterController
 {
@@ -181,15 +182,18 @@ namespace Invector.CharacterController
             if (collision.collider.gameObject.tag == "Pickup_Money")
             {
                 _playerGameRules.PickedUpMoney();
-                _audioSync.PlayWorldSound(Sounds.PickupMoney);
-                StartCoroutine(RemovePickupAfterDelay(collision.collider.gameObject));
+                _audioSync.PlayWorldSound(Sounds.PickupMoney); 
+                CmdRemoveGem(collision.collider.gameObject.GetComponent<NetworkIdentity>().netId);
             }
         }
 
-        private IEnumerator RemovePickupAfterDelay(GameObject pickupGameObject)
+        [Command]
+        private void CmdRemoveGem(uint netId)
         {
-            yield return new WaitForSeconds(0.05f);
-            _gameManager.CmdRemovePickup(pickupGameObject);
+            if (isServer)
+            {
+                _gameManager.RemoveGem(netId);
+            }
         }
 
         private void OnCollisionExit(Collision collision)

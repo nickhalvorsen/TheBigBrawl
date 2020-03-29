@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GameManager : NetworkBehaviour
 {
@@ -90,28 +91,27 @@ public class GameManager : NetworkBehaviour
     }
 
     [Command]
-    public void CmdRemovePickup(GameObject gameObject)
-    {
-        RpcRemovePickup(gameObject);
-    }
-
-    [ClientRpc]
-    private void RpcRemovePickup(GameObject gameObject)
-    {
-        NetworkServer.UnSpawn(gameObject);
-        gameObject.SetActive(false);
-    }
-
-    [Command]
     private void CmdGenerateGem(Vector3 position, Quaternion rotation)
     {
-        RpcGenerateGem(position, rotation);
+        if (isServer)
+        {
+            var o = Instantiate(GemPrefab, position, rotation);
+            // this NetworkServer.Spawn method is necessary to give the object's NetworkIdentity a netId. 
+            // Otherwise it will just be 0
+            NetworkServer.Spawn(o);
+        }
     }
 
-    [ClientRpc]
-    private void RpcGenerateGem(Vector3 position, Quaternion rotation)
+    public void RemoveGem(uint netId)
     {
-        Instantiate(GemPrefab, position, rotation);
+        var allGems = GameObject.FindGameObjectsWithTag("Pickup_Money");
+
+
+        var gemToRemove = allGems.FirstOrDefault(g => g.GetComponent<NetworkIdentity>().netId == netId);
+        if (gemToRemove != null)
+        {
+            NetworkServer.Destroy(gemToRemove);
+        }
     }
 
     [Command]
