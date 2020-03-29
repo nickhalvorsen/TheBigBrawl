@@ -12,7 +12,6 @@ public class ForceSync : NetworkBehaviour
     {
         var explosionPos = GetClapEffectOrigin();
         var forceOwnerInstanceId = gameObject.GetInstanceID();
-
         CmdServerForce(explosionPos, forceOwnerInstanceId);
     }
 
@@ -27,87 +26,110 @@ public class ForceSync : NetworkBehaviour
     [ClientRpc]
     void RpcTriggerForceOnClients(Vector3 explosionPos, int forceOwnerInstanceId)
     {
-        var localPlayer = GetLocalPlayer();
-
-        // Do not calculate force for this player if this player clapped
-        var myInstanceId = localPlayer.GetInstanceID();
-
-        Debug.Log("Triggering flap force effect on THIS PLAYER");
-
-        // Do not apply force if this player was not hit by clap
+        // Do not apply force if a player was not hit by clap
         var colliders = Physics.OverlapSphere(explosionPos, ClapEffectRadius);
 
         foreach (var collider in colliders)
         {
-            // Only apply forces for this local player
-            if (collider.gameObject.tag == "Player")
-            {
-                if (collider.gameObject.GetInstanceID() != myInstanceId)
-                {
-                    continue;
-                }
-                if (collider.gameObject.GetInstanceID() == myInstanceId && forceOwnerInstanceId == myInstanceId)
-                {
-                    continue;
-                }
-            }
-
-            var hitRigidbody = collider.GetComponent<Rigidbody>();
-
-            if (hitRigidbody == null)
+            if (!ShouldApplyClapEffectToThisObject(collider, explosionPos, forceOwnerInstanceId))
             {
                 continue;
             }
 
-            var distance = (hitRigidbody.transform.position - explosionPos).magnitude;
-            if (distance > ClapEffectRadius)
-            {
-                continue;
-            }
+            TriggerClapForceOnObject(collider, explosionPos, forceOwnerInstanceId);
+        }
+    }
 
+    private void TriggerClapForceOnObject(Collider collider, Vector3 explosionPos, int forceOwnerInstanceId)
+    {
+        var localPlayer = GetLocalPlayer();
 
-            if (distance < 0.5)
-            {
-                distance = 0.5f;
-            }
+        var hitRigidbody = collider.GetComponent<Rigidbody>();
 
-            // this is a number between 0 and 1 that gauges how powerful the slap was
-            // 1 = maximum power, 0 = minimum power
-            float slapPower = 1.0f - Mathf.Pow(distance / ClapEffectRadius, 2);
+        var forceMultiplier = 1f;
 
-            var arenaForce = 1.0f;
-
-            // if it's a player we know it's the local player 
-            if (collider.gameObject.tag == "Player")
-            {
-                localPlayer.gameObject.GetComponent<PlayerGameRules>().PlayerWasSlapped(slapPower);
-                arenaForce = localPlayer.gameObject.GetComponent<PlayerGameRules>()._isInArena ? 1.5f : 1.0f;
-                // set the isgrounded manually rather than waiting for the next frame to check.
-                // if this is not set manually like this, on this frame, the vThirdPersonMotor or something 
-                // will override the x and z velocity
-                localPlayer.GetComponent<vThirdPersonController>().isGrounded = false;
-            }
-
-            float forceMagnitude = ClapEffectForce * (1.0f / Mathf.Pow(distance / ClapEffectRadius, 2));
-            forceMagnitude *= arenaForce;// extra base clap power if they are in the round
-            var horizontalForceDirection = (localPlayer.transform.position - explosionPos).normalized;
-            horizontalForceDirection.y = 0;
+        // if the tag is Player we know it's the local player (earlier, it was filtered)
+        if (collider.gameObject.tag == "Player")
+        {
+            var slapPower = GetSlapPower(explosionPos, hitRigidbody.transform.position);
+            localPlayer.gameObject.GetComponent<PlayerGameRules>().PlayerWasSlapped(slapPower);
+            forceMultiplier += localPlayer.gameObject.GetComponent<PlayerGameRules>()._isInArena ? 0.5f : 0f;
+            // set the isgrounded manually rather than waiting for the next frame to check.
+            // if this is not set manually like this, on this frame, the vThirdPersonMotor or something 
+            // will override the x and z velocity
+            localPlayer.GetComponent<vThirdPersonController>().isGrounded = false;
 
             var playerCurrentDamage = localPlayer.gameObject.GetComponent<PlayerGameRules>().DamagePercent;
-            forceMagnitude += forceMagnitude * playerCurrentDamage / 100.0f;
-
-            var horizForceComponent = horizontalForceDirection * forceMagnitude;
-            var vertForceComponent = new Vector3(0, 0, 0);
-            
-            if (collider.gameObject.tag == "Player")
-            {
-                vertForceComponent = new Vector3(0, 1, 0) * forceMagnitude * 3;
-            }
-
-            var force = horizForceComponent + vertForceComponent;
-
-            hitRigidbody.AddForce(force, ForceMode.Impulse);
+            forceMultiplier += forceMultiplier * playerCurrentDamage / 50.0f;
         }
+
+        var baseClapForceVector = GetClapForceVector(explosionPos, hitRigidbody.transform.position, forceMultiplier);
+       
+
+        hitRigidbody.AddForce(baseClapForceVector, ForceMode.Impulse);
+    }
+
+    private bool ShouldApplyClapEffectToThisObject(Collider collider, Vector3 explosionPos, int forceOwnerInstanceId)
+    {
+        var localPlayer = GetLocalPlayer();
+        // Do not calculate force on this player if they were the clapper
+        var myInstanceId = localPlayer.GetInstanceID();
+
+        // Only apply forces for this local player
+        if (collider.gameObject.tag == "Player")
+        {
+            if (collider.gameObject.GetInstanceID() != myInstanceId)
+            {
+                return false;
+            }
+            if (collider.gameObject.GetInstanceID() == myInstanceId && forceOwnerInstanceId == myInstanceId)
+            {
+                return false;
+            }
+        }
+
+        if (collider.GetComponent<Rigidbody>() == null)
+        {
+            return false;
+        }
+
+        var distance = GetDistance(explosionPos, collider.GetComponent<Rigidbody>().transform.position);
+        if (distance > ClapEffectRadius)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private Vector3 GetClapForceVector(Vector3 explosionPosition, Vector3 rigidbodyPosition, float forceMultiplier)
+    {
+        var distance = GetDistance(explosionPosition, rigidbodyPosition);
+        if (distance < 0.5)
+        {
+            distance = 0.5f;
+        }
+
+        float forceMagnitude = forceMultiplier * ClapEffectForce * (1.0f / Mathf.Pow(distance / ClapEffectRadius, 2));
+        var horizontalForceDirection = (rigidbodyPosition - explosionPosition).normalized;
+        horizontalForceDirection.y = 0;
+        var horizForceComponent = horizontalForceDirection * forceMagnitude;
+        var vertForceComponent = new Vector3(0, 1, 0) * forceMagnitude * 3;
+        var force = horizForceComponent + vertForceComponent;
+        return force;
+    }
+
+    private float GetDistance(Vector3 v1, Vector3 v2)
+    {
+        return (v1 - v2).magnitude;
+    }
+
+    private float GetSlapPower(Vector3 explosionPosition, Vector3 rigidbodyPosition)
+    {
+        var distance = GetDistance(explosionPosition, rigidbodyPosition);
+        // this is a number between 0 and 1 that gauges how powerful the slap was
+        // 1 = maximum power, 0 = minimum power
+        return 1.0f - Mathf.Pow(distance / ClapEffectRadius, 2);
     }
 
     private GameObject GetLocalPlayer()
