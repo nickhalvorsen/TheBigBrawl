@@ -177,8 +177,6 @@ namespace Invector.CharacterController
                 //this.transform.parent = collision.collider.gameObject.transform;
             }
 
-            // todo delete gems if they are in water 
-            // todo clap affects gems 
             if (collision.collider.gameObject.tag == "Pickup_Money")
             {
                 _playerGameRules.PickedUpMoney();
