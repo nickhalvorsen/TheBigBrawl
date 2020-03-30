@@ -89,10 +89,6 @@ namespace Invector.CharacterController
         protected float groundDistance;
         public RaycastHit groundHit;
 
-
-        protected const int MaxJumpsMinusOne = 0;
-        protected int jumpsUsed = 0;
-
         #endregion
 
         #region Actions
@@ -395,12 +391,6 @@ namespace Invector.CharacterController
                     _rigidbody.AddForce(transform.up * (extraGravity * 2 * Time.deltaTime), ForceMode.VelocityChange);
                 }
             }
-            
-            if (isGrounded)
-            {
-                jumpsUsed = 0;
-            }
-            
         }
 
         void CheckGroundDistance()
