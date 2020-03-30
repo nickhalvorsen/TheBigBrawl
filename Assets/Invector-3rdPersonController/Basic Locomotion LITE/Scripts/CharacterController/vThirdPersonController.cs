@@ -224,7 +224,7 @@ namespace Invector.CharacterController
 
         public virtual void Jump()
         {
-            if (jumpsUsed >= MaxJumpsMinusOne)
+            if (jumpsUsed >= MaxJumps)
             {
                 return;
             }
