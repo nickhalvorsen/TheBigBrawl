@@ -1019,7 +1019,7 @@ MonoBehaviour:
   jumpTimer: 0.3
   jumpCounter: 0
   jumpForward: 4
-  jumpHeight: 5
+  jumpHeight: 10
   useRootMotion: 0
   freeWalkSpeed: 2.5
   freeRunningSpeed: 3
@@ -5903,7 +5903,7 @@ MonoBehaviour:
   serverOnly: 0
   localPlayerAuthority: 1
   m_AssetId: 
-  m_SceneId: 1722939184
+  m_SceneId: 3008840226
 --- !u!82 &-5345409201860940461
 AudioSource:
   m_ObjectHideFlags: 0

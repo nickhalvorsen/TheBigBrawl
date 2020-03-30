@@ -224,10 +224,17 @@ namespace Invector.CharacterController
 
         public virtual void Jump()
         {
+            if (jumpsUsed >= MaxJumps)
+            {
+                return;
+            }
+
+            jumpsUsed++;
+
             // conditions to do this action
-            bool jumpConditions = isGrounded && !isJumping;
+            //bool jumpConditions = isGrounded && !isJumping;
             // return if jumpCondigions is false
-            if (!jumpConditions) return;
+            //if (!jumpConditions) return;
             // trigger jump behaviour
             jumpCounter = jumpTimer;            
             isJumping = true;
