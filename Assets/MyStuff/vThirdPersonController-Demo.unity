@@ -1360,11 +1360,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -5975033157549033438, guid: de1b434d7e1a05145ade94565df51799,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 5.58
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: de1b434d7e1a05145ade94565df51799,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1434,6 +1429,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: -5975033157549033438, guid: de1b434d7e1a05145ade94565df51799,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.58
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de1b434d7e1a05145ade94565df51799, type: 3}
@@ -2288,7 +2288,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: fd42746b635e50d4083e4acadf33c882, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1e2531bd99a7a684bbdc2bbe139ba353, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -2841,7 +2841,7 @@ MonoBehaviour:
   transport: {fileID: 720575646}
   networkAddress: localhost
   maxConnections: 16
-  playerPrefab: {fileID: 2232023012232275213, guid: c842046f90fb5bf45bcd75d65e169543,
+  playerPrefab: {fileID: 9083614739125397577, guid: f477a9270db746d41963a6f0aae54a34,
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
