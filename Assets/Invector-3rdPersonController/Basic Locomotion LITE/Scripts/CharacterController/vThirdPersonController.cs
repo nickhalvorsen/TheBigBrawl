@@ -320,21 +320,32 @@ namespace Invector.CharacterController
         {
             if (obj.tag == "TallRoundTable")
             {
-                HandleEPressOnTable(obj);
+                CmdHandleEPressOnTable();
             }
         }
 
-        private void HandleEPressOnTable(GameObject obj)
+        [Command]
+        private void CmdHandleEPressOnTable()
         {
-            var chessBoard = GameObject.FindGameObjectWithTag("ChessBoard");
-
-            // todo don't hard code this 
-            chessBoard.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
-            chessBoard.transform.position = new Vector3(7.83f, 63.33f, 21.32f);
-            chessBoard.transform.localEulerAngles = new Vector3(0, 34, 0);
+            RpcResetChessBoard();
+        }
 
 
-            Debug.Log("should respawn chess board");
+        [ClientRpc]
+        private void RpcResetChessBoard()
+        {
+            Debug.Log("RpcResetChessBoard()");
+
+            if (isServer)
+            {
+                Debug.Log("reset chess board is server");
+                var chessBoard = GameObject.FindGameObjectWithTag("ChessBoard");
+
+                // todo don't hard code this 
+                chessBoard.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+                chessBoard.transform.position = new Vector3(7.83f, 63.33f, 21.32f);
+                chessBoard.transform.localEulerAngles = new Vector3(0, 34, 0);
+            }
         }
     }
 }

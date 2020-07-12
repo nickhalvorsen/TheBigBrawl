@@ -15,13 +15,7 @@ public class Gem : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Time.frameCount % 100 == 1)
-        {
-            if (gameObject.transform.position.y < -100)
-            {
-                gameObject.SetActive(false);
-            }
-        }
+
     }
 
     [Command]

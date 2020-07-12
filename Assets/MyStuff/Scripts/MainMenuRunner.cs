@@ -11,10 +11,12 @@ public class MainMenuRunner : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
 
-        _animator.SetFloat("InputVertical", 1.5f);
-        _animator.Play("Free Movement");
-        
+        if (_animator != null)
+        {
+            _animator.SetFloat("InputVertical", 1.5f);
+            _animator.Play("Free Movement");
 
+        }
     }
 
     // Update is called once per frame
