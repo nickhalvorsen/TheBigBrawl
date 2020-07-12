@@ -11,6 +11,10 @@ TagManager:
   - Fire
   - Pickup_Money
   - LaunchedByClap
+  - FxTemporaire
+  - TallRoundTable
+  - ChessBoard
+  - UI
   layers:
   - Default
   - TransparentFX

@@ -17,6 +17,7 @@ namespace Invector.CharacterController
         private PlayerGameRules _playerGameRules;
         private PlayerName _playerName;
         private GameManager _gameManager;
+        private GameObject _UI;
 
         private const float slapDuration = 0.40f;
         private const float slapEffectDelay = 0.15f;
@@ -37,6 +38,7 @@ namespace Invector.CharacterController
             _playerGameRules = GetComponent<PlayerGameRules>();
             _playerName = GetComponent<PlayerName>();
             _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+            _UI = GameObject.Find("UI");
             // Instead of syncing the name upon connecting, just do this
             InvokeRepeating("SyncName", 1f, 5f);
 
@@ -59,6 +61,8 @@ namespace Invector.CharacterController
             {
                 return;
             }
+
+            CheckPressingE();
 
             switch (attackState)
             {
@@ -136,7 +140,7 @@ namespace Invector.CharacterController
         {
             if (this.transform.position.y < -10)
             {
-                //Respawn();
+                Respawn();
             }
         }
 
@@ -251,6 +255,86 @@ namespace Invector.CharacterController
             public const int Death = 1;
             public const int EnterArena = 2;
             public const int PickupMoney = 3;
+        }
+
+        private void CheckPressingE()
+        {
+            var hit = GetObjectPointingAt();
+
+            if (CanInteractWithObject(hit))
+            {
+                ShowHideEPrompt(true);
+
+                if (Input.GetKeyUp(KeyCode.E))
+                {
+                    HandleEPress(hit.collider.gameObject);
+                }
+            }
+            else
+            {
+                ShowHideEPrompt(false);
+            }
+        }
+
+        private RaycastHit GetObjectPointingAt()
+        {
+            RaycastHit hit;
+            float maxDistance = 10; // distance you want it to work
+
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var layerMask = 1 << 8;
+            layerMask = ~layerMask;
+            Physics.Raycast(ray, out hit, maxDistance, layerMask);
+
+            return hit;
+        }
+
+        private bool CanInteractWithObject(RaycastHit hit)
+        {
+            if (hit.distance == 0)
+            {
+                return false;
+            }
+
+            if (hit.collider.gameObject.tag == "TallRoundTable" && CanInteractWithChessBoardTable())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CanInteractWithChessBoardTable()
+        {
+            var chessBoard = GameObject.FindGameObjectWithTag("ChessBoard");
+            return chessBoard.transform.position.y < 0;
+        }
+
+        private void ShowHideEPrompt(bool active)
+        {
+            var e = _UI.transform.Find("Press E");
+            e.gameObject.SetActive(active);
+        }
+
+        private void HandleEPress(GameObject obj)
+        {
+            if (obj.tag == "TallRoundTable")
+            {
+                HandleEPressOnTable(obj);
+            }
+        }
+
+        private void HandleEPressOnTable(GameObject obj)
+        {
+            var chessBoard = GameObject.FindGameObjectWithTag("ChessBoard");
+
+            // todo don't hard code this 
+            chessBoard.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
+            chessBoard.transform.position = new Vector3(7.83f, 63.33f, 21.32f);
+            chessBoard.transform.localEulerAngles = new Vector3(0, 34, 0);
+
+
+            Debug.Log("should respawn chess board");
         }
     }
 }

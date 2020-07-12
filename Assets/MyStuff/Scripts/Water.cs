@@ -41,7 +41,8 @@ public class Water : MonoBehaviour
             return;
         }
 
-        if (other.gameObject.tag != "Player")
+        if (other.gameObject.tag != "Player"
+            && other.gameObject.tag != "ChessBoard")
         {
             other.gameObject.SetActive(false);
         }
