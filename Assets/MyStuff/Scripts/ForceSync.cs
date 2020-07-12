@@ -93,7 +93,8 @@ public class ForceSync : NetworkBehaviour
             return false;
         }
 
-        var distance = GetDistance(explosionPos, collider.GetComponent<Rigidbody>().transform.position);
+        var colliderClosestPoint = collider.ClosestPoint(explosionPos);
+        var distance = GetDistance(explosionPos, colliderClosestPoint);
         if (distance > ClapEffectRadius)
         {
             return false;

@@ -28,23 +28,28 @@ public class AudioSync : NetworkBehaviour
 
     public void PlayWorldSound(int id)
     {
+        PlayWorldSound(id, transform.position);
+    }
+
+    public void PlayWorldSound(int id, Vector3 position)
+    {
         if (id < 0 || id > _clips.Length)
         {
             return;
         }
 
-        CmdSendServerSound(id);
+        CmdSendServerSound(id, position);
     }
 
     [Command]
-    void CmdSendServerSound(int id)
+    void CmdSendServerSound(int id, Vector3 position)
     {
-        RpcSendSoundToClients(id);
+        RpcSendSoundToClients(id, position);
     }
     
     [ClientRpc]
-    void RpcSendSoundToClients(int id)
+    void RpcSendSoundToClients(int id, Vector3 position)
     {
-        AudioSource.PlayClipAtPoint(_clips[id], transform.position);
+        AudioSource.PlayClipAtPoint(_clips[id], position);
     }
 }

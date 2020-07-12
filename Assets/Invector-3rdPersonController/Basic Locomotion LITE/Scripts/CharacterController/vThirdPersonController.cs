@@ -136,7 +136,7 @@ namespace Invector.CharacterController
         {
             if (this.transform.position.y < -10)
             {
-                Respawn();
+                //Respawn();
             }
         }
 

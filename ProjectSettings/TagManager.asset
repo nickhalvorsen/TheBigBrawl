@@ -10,6 +10,7 @@ TagManager:
   - Elevator arena door
   - Fire
   - Pickup_Money
+  - LaunchedByClap
   layers:
   - Default
   - TransparentFX
