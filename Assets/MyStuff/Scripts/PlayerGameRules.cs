@@ -58,8 +58,8 @@ public class PlayerGameRules : NetworkBehaviour
             return;
         }
 
-        _vThirdPersonController.DamagePercent += slapPower * 5;
-        _playerName.UpdateDamagePercent(_vThirdPersonController.DamagePercent);
+        DamagePercent += slapPower * 5;
+        _playerName.UpdateDamagePercent(DamagePercent);
     }
 
     private void OnGUI()

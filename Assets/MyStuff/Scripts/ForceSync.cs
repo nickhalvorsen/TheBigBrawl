@@ -17,7 +17,7 @@ public class ForceSync : NetworkBehaviour
 
     // client sending to server
     [Command]
-    void CmdServerForce(Vector3 explosionPos, int forceOwnerInstanceId)
+    public void CmdServerForce(Vector3 explosionPos, int forceOwnerInstanceId)
     {
         RpcTriggerForceOnClients(explosionPos, forceOwnerInstanceId);
     }
@@ -59,8 +59,8 @@ public class ForceSync : NetworkBehaviour
             // will override the x and z velocity
             localPlayer.GetComponent<vThirdPersonController>().isGrounded = false;
 
-            var playerCurrentDamage = localPlayer.gameObject.GetComponent<PlayerGameRules>().DamagePercent;
-            forceMultiplier += forceMultiplier * playerCurrentDamage / 50.0f;
+            var playerCurrentDamage = localPlayer.gameObject.GetComponent<PlayerGameRules>().DamagePercent; // todo: this is always 0, why?
+            forceMultiplier += playerCurrentDamage / 50.0f;
         }
 
         var baseClapForceVector = GetClapForceVector(explosionPos, hitRigidbody.transform.position, forceMultiplier);

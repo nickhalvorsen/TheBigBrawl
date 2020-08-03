@@ -25,7 +25,6 @@ namespace Invector.CharacterController
         // whether the effect happened or not already
         // during this animation 
         private bool slapEffectHappened = false;
-        public float DamagePercent;
         private enum AttackState { Attacking, Waiting }
         private AttackState attackState = AttackState.Waiting;
 
@@ -174,6 +173,10 @@ namespace Invector.CharacterController
             if (collision.collider.name == "Bouncer")
             {
                 this.gameObject.GetComponent<Rigidbody>().AddExplosionForce(200, this.gameObject.transform.position + new Vector3(0,0,0), 10, 0.5f, ForceMode.Impulse);
+            }
+            if (collision.collider.name == "Bouncer2")
+            {
+                _forceSync.CmdServerForce(collision.collider.transform.position, -1);
             }
 
             if (collision.collider.gameObject.tag == "Moving platform")
