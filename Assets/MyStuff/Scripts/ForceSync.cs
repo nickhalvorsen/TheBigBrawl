@@ -59,7 +59,7 @@ public class ForceSync : NetworkBehaviour
             // will override the x and z velocity
             localPlayer.GetComponent<vThirdPersonController>().isGrounded = false;
 
-            var playerCurrentDamage = localPlayer.gameObject.GetComponent<PlayerGameRules>().DamagePercent; // todo: this is always 0, why?
+            var playerCurrentDamage = localPlayer.gameObject.GetComponent<PlayerGameRules>().DamagePercent; 
             forceMultiplier += playerCurrentDamage / 50.0f;
         }
 

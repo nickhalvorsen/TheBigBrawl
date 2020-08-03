@@ -337,11 +337,8 @@ namespace Invector.CharacterController
         [ClientRpc]
         private void RpcResetChessBoard()
         {
-            Debug.Log("RpcResetChessBoard()");
-
             if (isServer)
             {
-                Debug.Log("reset chess board is server");
                 var chessBoard = GameObject.FindGameObjectWithTag("ChessBoard");
 
                 // todo don't hard code this 
