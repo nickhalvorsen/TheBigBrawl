@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Water : MonoBehaviour
 {
+    public GameObject splashPrefab;
+
     private AudioSync _audioSync;
     private float timeSinceObjectCreated = 0;
 
@@ -23,7 +25,12 @@ public class Water : MonoBehaviour
         {
             return;
         }
+        
+        // Create splash particle effect
+        var splash = Instantiate(splashPrefab, other.transform.position, Quaternion.identity);
+        Destroy(splash, 2000);
 
+        // play splash sound
         _audioSync.PlayWorldSound(Sounds.Splash, other.transform.position);
     }
 
