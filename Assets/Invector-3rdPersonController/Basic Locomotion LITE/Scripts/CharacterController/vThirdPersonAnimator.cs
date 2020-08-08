@@ -69,18 +69,14 @@ namespace Invector.CharacterController
 
         private void HandleAirStrafe()
         {
-            var force = new Vector3(0, 0, 0);
-
             if (Input.GetKey(KeyCode.W) 
                 || Input.GetKey(KeyCode.A)
                 || Input.GetKey(KeyCode.S)
                 || Input.GetKey(KeyCode.D))
             {
-                force = transform.forward * AirStrafeSpeed * Time.deltaTime;
+                var force = transform.forward * AirStrafeSpeed * Time.deltaTime;
+                gameObject.GetComponent<Rigidbody>().AddForce(force, ForceMode.VelocityChange);
             }
-
-            
-            gameObject.GetComponent<Rigidbody>().AddForce(force, ForceMode.VelocityChange);
         }
     }
 }
