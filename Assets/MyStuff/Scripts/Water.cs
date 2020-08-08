@@ -27,7 +27,7 @@ public class Water : MonoBehaviour
         }
         
         // Create splash particle effect
-        var splash = Instantiate(splashPrefab, other.transform.position, Quaternion.identity);
+        var splash = Instantiate(splashPrefab, other.transform.position, new Quaternion(.25f,-.25f,.25f,.25f));
         Destroy(splash, 2000);
 
         // play splash sound
