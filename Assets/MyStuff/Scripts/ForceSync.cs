@@ -1,5 +1,6 @@
 ﻿using Invector.CharacterController;
 using Mirror;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -53,14 +54,17 @@ public class ForceSync : NetworkBehaviour
         {
             var slapPower = GetSlapPower(explosionPos, hitRigidbody.transform.position);
             localPlayer.gameObject.GetComponent<PlayerGameRules>().PlayerWasSlapped(slapPower);
-            forceMultiplier += localPlayer.gameObject.GetComponent<PlayerGameRules>()._isInArena ? 0.5f : 0f;
+            var arenaForceMultiplier = localPlayer.gameObject.GetComponent<PlayerGameRules>()._isInArena ? 0.7f : 0f;
             // set the isgrounded manually rather than waiting for the next frame to check.
             // if this is not set manually like this, on this frame, the vThirdPersonMotor or something 
             // will override the x and z velocity
             localPlayer.GetComponent<vThirdPersonController>().isGrounded = false;
 
             var playerCurrentDamage = localPlayer.gameObject.GetComponent<PlayerGameRules>().DamagePercent; 
-            forceMultiplier += playerCurrentDamage / 50.0f;
+            var damageForceMultiplier = playerCurrentDamage / 40.0f;
+
+            forceMultiplier += arenaForceMultiplier;
+            forceMultiplier += (float)Math.Pow(damageForceMultiplier, 1.5);
         }
 
         var baseClapForceVector = GetClapForceVector(explosionPos, hitRigidbody.transform.position, forceMultiplier);
@@ -115,7 +119,7 @@ public class ForceSync : NetworkBehaviour
         var horizontalForceDirection = (rigidbodyPosition - explosionPosition).normalized;
         horizontalForceDirection.y = 0;
         var horizForceComponent = horizontalForceDirection * forceMagnitude;
-        var vertForceComponent = new Vector3(0, 1, 0) * forceMagnitude * 3;
+        var vertForceComponent = new Vector3(0, 1, 0) * forceMagnitude * 1.4f;
         var force = horizForceComponent + vertForceComponent;
         return force;
     }

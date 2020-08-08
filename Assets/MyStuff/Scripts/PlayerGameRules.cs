@@ -58,7 +58,7 @@ public class PlayerGameRules : NetworkBehaviour
             return;
         }
 
-        DamagePercent += slapPower * 5;
+        DamagePercent += slapPower * 20;
         _playerName.UpdateDamagePercent(DamagePercent);
     }
 
