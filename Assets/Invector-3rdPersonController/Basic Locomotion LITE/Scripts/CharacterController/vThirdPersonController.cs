@@ -284,6 +284,9 @@ namespace Invector.CharacterController
             RaycastHit hit;
             float maxDistance = 10; // distance you want it to work
 
+           // todo: this is busted, since I switched the player away from layer 8 to layer 1.
+            //    I did that to fix the glitch where air acceleration didn't work for some reason.
+
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             var layerMask = 1 << 8;
             layerMask = ~layerMask;
