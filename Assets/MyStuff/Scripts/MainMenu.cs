@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var se = new InputField.SubmitEvent();
+        var se = new InputField.EndEditEvent();
         se.AddListener(NameUpdated);
         PlayerNameField.onEndEdit = se;
 

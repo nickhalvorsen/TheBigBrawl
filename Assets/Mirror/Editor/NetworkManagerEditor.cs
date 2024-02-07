@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -9,20 +12,15 @@ namespace Mirror
     public class NetworkManagerEditor : Editor
     {
         SerializedProperty spawnListProperty;
-
         ReorderableList spawnList;
-
         protected NetworkManager networkManager;
 
         protected void Init()
         {
             if (spawnList == null)
             {
-
                 networkManager = target as NetworkManager;
-
                 spawnListProperty = serializedObject.FindProperty("spawnPrefabs");
-
                 spawnList = new ReorderableList(serializedObject, spawnListProperty)
                 {
                     drawHeaderCallback = DrawHeader,
@@ -31,7 +29,8 @@ namespace Mirror
                     onRemoveCallback = RemoveButton,
                     onChangedCallback = Changed,
                     onAddCallback = AddButton,
-                    elementHeight = 16 // this uses a 16x16 icon. other sizes make it stretch.
+                    // this uses a 16x16 icon. other sizes make it stretch.
+                    elementHeight = 16
                 };
             }
         }
@@ -45,6 +44,76 @@ namespace Mirror
             if (EditorGUI.EndChangeCheck())
             {
                 serializedObject.ApplyModifiedProperties();
+            }
+
+            if (GUILayout.Button("Populate Spawnable Prefabs"))
+            {
+                ScanForNetworkIdentities();
+            }
+        }
+
+        void ScanForNetworkIdentities()
+        {
+            List<GameObject> identities = new List<GameObject>();
+            bool cancelled = false;
+            try
+            {
+                string[] paths = EditorHelper.IterateOverProject("t:prefab").ToArray();
+                int count = 0;
+                foreach (string path in paths)
+                {
+                    // ignore test & example prefabs.
+                    // users sometimes keep the folders in their projects.
+                    if (path.Contains("Mirror/Tests/") ||
+                        path.Contains("Mirror/Examples/"))
+                    {
+                        continue;
+                    }
+
+                    if (EditorUtility.DisplayCancelableProgressBar("Searching for NetworkIdentities..",
+                            $"Scanned {count}/{paths.Length} prefabs. Found {identities.Count} new ones",
+                            count / (float)paths.Length))
+                    {
+                        cancelled = true;
+                        break;
+                    }
+
+                    count++;
+
+                    NetworkIdentity ni = AssetDatabase.LoadAssetAtPath<NetworkIdentity>(path);
+                    if (!ni)
+                    {
+                        continue;
+                    }
+
+                    if (!networkManager.spawnPrefabs.Contains(ni.gameObject))
+                    {
+                        identities.Add(ni.gameObject);
+                    }
+
+                }
+            }
+            finally
+            {
+
+                EditorUtility.ClearProgressBar();
+                if (!cancelled)
+                {
+                    // RecordObject is needed for "*" to show up in Scene.
+                    // however, this only saves List.Count without the entries.
+                    Undo.RecordObject(networkManager, "NetworkManager: populated prefabs");
+
+                    // add the entries
+                    networkManager.spawnPrefabs.AddRange(identities);
+
+                    // sort alphabetically for better UX
+                    networkManager.spawnPrefabs = networkManager.spawnPrefabs.OrderBy(go => go.name).ToList();
+
+                    // SetDirty is required to save the individual entries properly.
+                    EditorUtility.SetDirty(target);
+                }
+                // Loading assets might use a lot of memory, so try to unload them after
+                Resources.UnloadUnusedAssets();
             }
         }
 
@@ -66,7 +135,7 @@ namespace Mirror
             else
             {
                 NetworkIdentity identity = go.GetComponent<NetworkIdentity>();
-                label = new GUIContent(go.name, identity != null ? "AssetId: [" + identity.assetId + "]" : "No Network Identity");
+                label = new GUIContent(go.name, identity != null ? $"AssetId: [{identity.assetId}]" : "No Network Identity");
             }
 
             GameObject newGameObject = (GameObject)EditorGUI.ObjectField(r, label, go, typeof(GameObject), false);
@@ -75,7 +144,7 @@ namespace Mirror
             {
                 if (newGameObject != null && !newGameObject.GetComponent<NetworkIdentity>())
                 {
-                    Debug.LogError("Prefab " + newGameObject + " cannot be added as spawnable as it doesn't have a NetworkIdentity.");
+                    Debug.LogError($"Prefab {newGameObject} cannot be added as spawnable as it doesn't have a NetworkIdentity.");
                     return;
                 }
                 prefab.objectReferenceValue = newGameObject;

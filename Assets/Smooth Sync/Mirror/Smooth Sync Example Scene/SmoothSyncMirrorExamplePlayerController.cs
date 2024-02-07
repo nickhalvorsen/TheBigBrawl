@@ -47,7 +47,7 @@ public class SmoothSyncMirrorExamplePlayerController : NetworkBehaviour
             smoothSync.validateStateMethod = validateStateOfPlayer;
         }
     }
-
+    
     /// <summary>
     /// Simple movement. 
     /// <remarks>
@@ -64,7 +64,7 @@ public class SmoothSyncMirrorExamplePlayerController : NetworkBehaviour
         // you can Teleport. This is useful for things like respawning.
         if (Input.GetKeyDown(KeyCode.T))
         {
-            if (hasAuthority)
+            if (isOwned)
             {
                 transform.position = transform.position + Vector3.right * 18;
                 smoothSync.teleportOwnedObjectFromOwner();
@@ -75,7 +75,7 @@ public class SmoothSyncMirrorExamplePlayerController : NetworkBehaviour
             }
         }
 
-        if (!hasAuthority) return;
+        if (!(isOwned || (NetworkServer.active && netIdentity.connectionToClient == null))) return;
 
         // If you need to send a State update, call forceStateSendNextFrame() and the next fixed update's State will be sent.
         // Useful for collisions and fast changes in direction so you can be as accurate as possible in between your send rate.
