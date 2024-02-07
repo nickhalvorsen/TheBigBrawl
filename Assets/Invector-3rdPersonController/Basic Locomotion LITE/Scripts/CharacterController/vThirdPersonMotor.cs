@@ -325,7 +325,8 @@ namespace Invector.CharacterController
                 else
                 {
                     var vel = transform.forward * (jumpForward * speed);
-                    _rigidbody.velocity = new Vector3(vel.x, _rigidbody.velocity.y, vel.z);
+                    // commenting this out fixed air velocity
+                   // _rigidbody.velocity = new Vector3(vel.x, _rigidbody.velocity.y, vel.z);
                 }
             }
             else
