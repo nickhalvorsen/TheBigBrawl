@@ -18,10 +18,10 @@ public class Elevator : NetworkBehaviour
     private static int PlayersToTriggerStart => GameManager.PlayersNeededToStartGame;
     private const int CountdownSeconds = 4;
     private const float ElevatorWallOpenCloseSpeed = 2; // this many seconds it takes 
-    private const float MoveToDestinationVelocity = 5;
+    private const float MoveToDestinationVelocity = 25;
     private const float PauseAtDestinationDuration = 2;
     private const float TimeToPauseAfterOpen = 4;
-    private const float TimeToOpenBottom = 3;
+    private const float TimeToOpenBottom = 6;
 
 
     private enum ElevatorState
@@ -51,7 +51,7 @@ public class Elevator : NetworkBehaviour
     private GameObject _entranceDoor;
     private GameObject _bottomPlatform;
     private GameObject[] _textDisplays;
-
+    
     private float _startCountdown;
     private int _lastStartCountdownBeep;
     private float _timer;
@@ -164,8 +164,7 @@ public class Elevator : NetworkBehaviour
                 break;
         }
 
-
-        CmdUpdateTextDisplays();
+        RpcUpdateTextDisplays(GetStatusText());
     }
 
     private void UpdateWaitingForPlayers()
@@ -249,8 +248,8 @@ public class Elevator : NetworkBehaviour
             return;
         }
 
-        _rigidBody.velocity = (_endPos - _startPos).normalized * MoveToDestinationVelocity;
-        _rigidBody.MovePosition( _rigidBody.position + _rigidBody.velocity * Time.deltaTime);
+        var velocity = (_endPos - _startPos).normalized * MoveToDestinationVelocity;
+        _rigidBody.MovePosition( _rigidBody.position + velocity * Time.deltaTime);
 
         //var players = GameObject.FindGameObjectsWithTag("Player");
         //foreach (var player in players)
@@ -341,8 +340,8 @@ public class Elevator : NetworkBehaviour
 
         _timer -= Time.deltaTime;
 
-        _floorRigidBody.velocity = new Vector3(0, 0, 5);
-        _floorRigidBody.MovePosition(_floorRigidBody.position + _floorRigidBody.velocity * Time.deltaTime);
+        var velocity = new Vector3(0, 0, 20);
+        _floorRigidBody.MovePosition(_floorRigidBody.position + velocity * Time.deltaTime);
     }
 
     private void BeginClosingBottomAtDestination()
@@ -362,7 +361,7 @@ public class Elevator : NetworkBehaviour
 
         _timer -= Time.deltaTime;
 
-        _floorRigidBody.MovePosition(_floorRigidBody.position + new Vector3(0, 0, -5) * Time.deltaTime);
+        _floorRigidBody.MovePosition(_floorRigidBody.position + new Vector3(0, 0, -20) * Time.deltaTime);
     }
 
     private void BeginMovingToStart()
@@ -380,8 +379,8 @@ public class Elevator : NetworkBehaviour
             return;
         }
 
-        _rigidBody.velocity = (_startPos - _endPos).normalized * MoveToDestinationVelocity;
-        _rigidBody.MovePosition(_rigidBody.position + _rigidBody.velocity * Time.deltaTime);
+        var velocity = (_startPos - _endPos).normalized * MoveToDestinationVelocity;
+        _rigidBody.MovePosition(_rigidBody.position + velocity * Time.deltaTime);
     }
 
     private void BeginClosingArenaDoorAtStart()
@@ -433,13 +432,6 @@ public class Elevator : NetworkBehaviour
     {
         _audioSync.PlayWorldSound(Sounds.DoorContact);
         _state = ElevatorState.WaitingForPlayers;
-    }
-
-
-    [Command]
-    private void CmdUpdateTextDisplays()
-    {
-        RpcUpdateTextDisplays(GetStatusText());
     }
 
     [ClientRpc]
