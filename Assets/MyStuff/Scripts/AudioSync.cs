@@ -38,7 +38,11 @@ public class AudioSync : NetworkBehaviour
             return;
         }
 
-        CmdSendServerSound(id, position);
+        if (isServer)
+            RpcSendSoundToClients(id, position);
+        else
+            CmdSendServerSound(id, position);
+
     }
 
     [Command]
