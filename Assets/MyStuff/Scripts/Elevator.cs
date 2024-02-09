@@ -451,6 +451,10 @@ public class Elevator : NetworkBehaviour
                 return $"Waiting for {PlayersToTriggerStart - GetPlayersInElevator()} more players";
             case ElevatorState.CountingDown:
                 return $"Starting game in {(int)_startCountdown}";
+            case ElevatorState.PausingAfterOpen:
+            case ElevatorState.OpeningBottomAtDestination:
+            case ElevatorState.ClosingBottomAtDestination:
+                return "Jump down!";
             default:
                 return "";
                 //return _state.ToString();
