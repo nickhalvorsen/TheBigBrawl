@@ -438,6 +438,9 @@ public class Elevator : NetworkBehaviour
     [ClientRpc]
     private void RpcUpdateTextDisplays(string text)
     {
+        if (_textDisplays == null)
+            return;
+
         foreach (var o in _textDisplays)
         {
             o.GetComponent<TextMesh>().text = text;
