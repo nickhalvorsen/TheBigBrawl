@@ -326,6 +326,7 @@ public class Elevator : NetworkBehaviour
         _state = ElevatorState.OpeningBottomAtDestination;
         _timer = TimeToOpenBottom;
         _audioSync.PlayWorldSound(Sounds.DoorMoving);
+        // IDK why this is necessary instead of adding in the unity editor. 
         _floorRigidBody = _bottomPlatform.AddComponent<Rigidbody>();
         _floorRigidBody.isKinematic = true;
     }
