@@ -164,6 +164,7 @@ public class Elevator : NetworkBehaviour
                 break;
         }
 
+        // there's gotta be a better method than calling this every frame
         RpcUpdateTextDisplays(GetStatusText());
     }
 
